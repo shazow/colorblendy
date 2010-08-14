@@ -9,24 +9,9 @@
 <title>ColorBlendy - Blend colors with different modes like multiply, overlay, dodge.</title>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/core.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-    $(".color-draggable").draggable({helper: 'clone'});
-    $(".color-droppable").droppable({
-        activeClass: 'ui-state-active',
-        drop: function(e, ui) {
-            $(this).css('background-color', $(ui.draggable).css('background-color'));
-            render_blend();
-        }
-    });
-    $(".color-trash").droppable({
-        drop: function(e, ui) {
-        foo = ui;
-            $(ui.draggable).fadeOut();
-        }
-    });
 });
 </script>
 
@@ -37,24 +22,6 @@ $(document).ready(function() {
     }
     input {
         font-size: 18px;
-    }
-    .drag-show {
-        display: none;
-    }
-    .ui-state-active .drag-show {
-        display: block;
-    }
-    .drop-icon {
-        text-align: center; font-size: 60px;
-        opacity: 0.2;
-    }
-    .section {
-        overflow: hidden;
-    }
-    #palette div {
-        height: 90px; margin: 5px; border: 1px solid #000;
-        width: 90px;
-        float: left;
     }
     input.hex {
         width: 6em;
@@ -71,48 +38,12 @@ $(document).ready(function() {
 
 
 <div class="section header">
-    <div style="float: left; height: 100px; width: 100px; background: #aaa;">
-        <div style="float: right; height: 60px; width: 50px; margin: 20px 0 20px 0; background: #ccc;"></div>
-    </div>
-    <div style="float: left; margin: 20px 0 20px 0; width: 100px; height: 60px; background: #eee;">
-        <h1 style="line-height: 50px; color: #888; text-align: center; font-size: 10px;">ColorBlender</h1>
-    </div>
-</div>
-
-<div class="section color">
-    <h2>1. Choose a color</h2>
-    <form onsubmit="add_color(this); return false;">
-        <input type="text" class="color-input hex" value="#ffffff" style="width: 6em;" />
-<!--         <input class="percent" type="text" value="100%" /> -->
-        <input type="submit" value="Add" />
-    </form>
-</div>
-
-<div class="section palette">
-    <h2>2. Add to the palette</h2>
-    <div id="palette" style="height: 100px; border: 1px dashed #ddd;">
-        <div class="color-trash" style="background: #eee; border-color: #fff; line-height: 90px; text-align: center; float: right;">x</div>
-        <div class="color-unit color-draggable" style="background: #ddd;"></div>
-        <div class="color-unit color-draggable" style="background: #faa;"></div>
-    </div>
+    ColorBlendy
 </div>
 
 <div class="section blend">
-    <h2>3. Drag and blend</h2>
-
-    <div style="float: left; width: 300px; height: 200px;">
-        <div id="color-1" class="color-droppable" style="float: left; height: 200px; width: 200px; background: #aaa;">
-            <div id="color-blended" style="float: right; height: 120px; width: 100px; margin: 40px 0 40px 0; background: #9f9f9f;"></div>
-            <div style="line-height: 200px;" class="drop-icon drag-show">+</div>
-        </div>
-        <div id="color-2" class="color-droppable" style="float: left; margin: 40px 0 40px 0; width: 100px; height: 120px; background: #eee;">
-            <div style="line-height: 120px;" class="drop-icon drag-show">+</div>
-        </div>
-    </div>
-    <div style="float: left; margin-left: 20px; line-height: 200px;">
-    <form onsubmit="add_color(this); return false;">
-        <input class="hex" type="text" value="#aaaaaa" id="current-color-1" disabled="disabled" />
-        <select id="blend-mode" onchange="render_blend()">
+    <form onsubmit="return false;">
+        <select id="blend-mode" onchange="render_blend()" size="6">
             <option value="multiply">Multiply</option>
             <option value="divide">Divide</option>
             <option value="screen">Screen</option>
@@ -120,13 +51,11 @@ $(document).ready(function() {
             <option value="dodge">Dodge</option>
             <option value="burn">Burn</option>
         </select>
-        <input class="hex" type="text" value="#eeeeee" id="current-color-2" disabled="disabled" />
-        =
-        <input class="hex color-input" type="text" value="#9f9f9f" id="current-blend" />
-        <input type="submit" value="Add" />
     </form>
     </div>
 </div>
 
 
 </body>
+
+</html>
