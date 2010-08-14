@@ -42,27 +42,32 @@ function apply_filter(c1, c2, fn) {
 
 var blend_filters = {
     multiply: function(c1, c2) {
-        return Math.round((c1*c2)/255);
+        return (c1*c2)/255;
     },
     divide: function(c1, c2) {
-        return Math.round((256*c2)/(c1+1)) % 255;
+        return (256*c2)/(c1+1);
     },
     screen: function(c1, c2) {
-        return Math.round(255 - ((255-c1)*(255-c2))/255);
+        return 255 - ((255-c1)*(255-c2))/255;
     },
     overlay: function(c1, c2) {
-        return Math.round((c2/255)*((c2+(2*c1)/255)*(255-c2))) % 255;
+        return (c2/255)*(c2+(2*c1)/255)*(255-c2);
     },
     dodge: function(c1, c2) {
-        return Math.round((c2*256)/(256-c1)) % 255;
+        return (c2*256)/(256-c1);
     },
     burn: function(c1, c2) {
-        return Math.round(255 - (((255-c2)*256)/(c1+1))) % 255;
+        return 255 - (((255-c2)*256)/(c1+1));
     }
 }
 
 function blend(filter, c1, c2) {
-    return apply_filter(c1, c2, blend_filters[filter])
+    var c = apply_filter(c1, c2, blend_filters[filter])
+
+    // Normalize colors
+    var max = Math.max(c[0], c[1], c[2]);
+
+    return $.map(c, function(o) { return Math.round((o/max)*255)})
 }
 
 
