@@ -110,15 +110,13 @@ select option {
         </div>
         <div id="color-blended-preview">
             <p><input type="text" id="color-blended" value="#444b52" readonly="readonly" /></p>
-            <p>
-                <select onchange="render_blend()" size="6" id="blend-mode">
-                    <option value="multiply" selected="selected">Multiply</option>
-                    <option value="screen">Screen</option>
-                    <option value="overlay">Overlay</option>
-                    <option value="dodge">Dodge</option>
-                    <option value="burn">Burn</option>
-                </select>
-            </p>
+            <ul id="blend-mode">
+                <li class="active">Multiply</li>
+                <li>Screen</li>
+                <li>Overlay</li>
+                <li>Dodge</li>
+                <li>Burn</li>
+            </ul>
         </div>
     </div>
     <div id="color-top-preview">
