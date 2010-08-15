@@ -17,41 +17,69 @@ $(document).ready(function() {
 
 <style type="text/css">
 
+html {
+    background-color:#000;
+}
 body {
     font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
-    padding: 0; margin: 0;
+    padding: 25px 0 0 0; margin: 0;
     height: 100%;
 }
+
+h1 {
+    font-weight:normal;
+    text-transform:uppercase;
+    letter-spacing:0.2em;
+    color:#fff;
+    font-size:0.8em;
+}
+
 select, input {
     font-size: 20px;
-    width: 150px;
+    width: 200px;
     text-align: center;
+    margin-top:30px;
+    padding:0.5em 0.2em;
+    color:#888;
+}
+
+select {
+    padding:0;
+    height:190px;
+    width:215px;
+    border:0;
+    margin-top:135px;
+}
+
+select option {
+    padding:0.3em 0;
 }
 #color-bottom-preview {
     float: left; width: 66.6%; height: 100%;
     background: #aaa;
 }
+
 #color-top-preview {
-    float: left; width: 33.3%; height: 80%; margin: 50px 0 0 0;
+    float: left; width: 33.3%; height: 82%; margin: 50px 0 0 0;
     background: #eee;
 }
 #color-blended-preview {
-    float: right; width: 50%; min-width: 200px; height: 80%; margin: 50px 0 0 0;
+    float: right; width: 50%; min-width: 200px; height: 82%; margin: 0 0 0 0;
     background: #999;
 }
+
+
 </style>
-
+</head>
 <body>
-
-
-<div class="header">
-    ColorBlendy
-</div>
 
 <form onsubmit="render_blend(); return false;">
 
-<div style="height: 500px; width: 100%; text-align: center;">
+<div style="height: 600px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
+        <h1 style="line-height:50px; height:50px; margin:0; float:right; width:50%;">
+            ColorBlendy
+        </h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
             <p><input type="text" id="color-bottom" value="#aaaaaa" /></p>
         </div>
