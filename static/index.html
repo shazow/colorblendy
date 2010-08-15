@@ -93,7 +93,7 @@ select option {
 }
 #color-blended-preview {
     float: right; width: 50%; min-width: 200px; height: 82%; margin: 0 0 0 0;
-    background: #444b52;
+    background: #222529;
 
     -webkit-border-top-left-radius: 20px;
     -webkit-border-bottom-left-radius: 20px;
@@ -123,6 +123,17 @@ select option {
     background-color:rgba(255,255,255,0.1);
 }
 
+#footer {
+    text-align: center;
+    font-size: 10px;
+    line-height: 50px;
+    height: 50px;
+    color: #444;
+}
+#footer a {
+    color: #666;
+    text-decoration: none;
+}
 
 
 
@@ -141,7 +152,7 @@ select option {
             <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend();" tabindex="1" /></p>
         </div>
         <div id="color-blended-preview">
-            <p><input type="text" id="color-blended" value="#444b52" readonly="readonly" /></p>
+            <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
             <ul id="blend-mode">
                 <li class="active">Multiply</li>
                 <li>Screen</li>
@@ -157,6 +168,8 @@ select option {
 </div>
 
 </form>
+
+<div id="footer">A <a href="http://10k.aneventapart.com/">10K Apart</a> project by <a href="http://twitter.com/shazow">shazow</a> and <a href="http://twitter.com/limedaring">limedaring</a>.</div>
 
 </body>
 
