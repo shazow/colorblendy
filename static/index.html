@@ -17,95 +17,52 @@ $(document).ready(function() {
 
 <style type="text/css">
 
-
-
-    body {
-        font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
-        padding: 10px;
-    }
-input {
-    font-size:14px;
-    width:80px;
-    padding:0.2em;
+body {
+    font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
+    padding: 0; margin: 0;
+    height: 100%;
 }
-    input.hex {
-        width: 6em;
-        font-family: monospace;
-        text-align: center;
-    }
-    input.percent {
-        width: 3em;
-        text-align: center;
-    }
-
-#blender-maker {
-    position:relative;
-    width:300px;
-    text-align:center;
-    float:left;
+select {
+    overflow: hidden;
 }
+#blend-mode {
 
-#c1 {
-    background-color:black;
-    width:200px;
-    height:75px;
-    margin:0 auto;
-    padding-top:45px;
 }
-
-#c2 {
-    background-color:blue;
-    width:300px;
-    height:50px;
-    padding-top:140px;
-}
-
-#blended {
-    background-color:turquoise;
-    width:200px;
-    height:75px;
-    position:absolute;
-    top:120px;
-    left:50px;
-    padding-top:45px;
-}   
 </style>
 
 <body>
 
 
-<div class="section header">
+<div class="header">
     ColorBlendy
 </div>
 
-<div id="blender-maker">
-    <div id="c1">
-        <input type="text" name="c1" value="Color #1" />
-    </div>
+<form onsubmit="return false;">
 
-    <div id="c2">
-        <input type="text" name="c2" value="Color #2" />
+<div style="height: 500px; width: 100%; text-align: center;">
+    <div style="float: left; width: 66.6%; height: 100%; background: #aaa;">
+        <div style="float: left; width: 50%; margin: 50px 0 0 0;">
+            <p><input type="text" id="color-bottom" /></p>
+        </div>
+        <div style="float: right; width: 50%; min-width: 200px; height: 80%; margin: 50px 0 0 0; background: #999;">
+            <p><input type="text" id="color-blended" /></p>
+            <p>
+                <select onchange="render_blend()" size="6" style="margin-top: 2em;" >
+                    <option value="multiply" selected="selected">Multiply</option>
+                    <option value="screen">Screen</option>
+                    <option value="overlay">Overlay</option>
+                    <option value="dodge">Dodge</option>
+                    <option value="burn">Burn</option>
+                </select>
+            </p>
+        </div>
     </div>
-
-    <div id="blended">
-        <input type="text" name="blended" value="Blended" />
-    </div>
-</div>
-
-<div class="section blend">
-    <form onsubmit="return false;">
-        <select id="blend-mode" onchange="render_blend()" size="6">
-            <option value="multiply">Multiply</option>
-            <option value="divide">Divide</option>
-            <option value="screen">Screen</option>
-            <option value="overlay">Overlay</option>
-            <option value="dodge">Dodge</option>
-            <option value="burn">Burn</option>
-        </select>
-    </form>
+    <div style="float: left; width: 33.3%; height: 80%; margin: 50px 0 0 0; background: #eee;">
+        <p><input type="text" id="color-top" /></p>
     </div>
 </div>
 
+</form>
 
 </body>
 
