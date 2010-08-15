@@ -19,9 +19,9 @@ $(document).ready(function() {
         render_blend();
     });
     $(document).keydown(function(e) {
-        if(e.which == 38) { // Down
+        if(e.which == 38 || e.which == 75) { // Down
             $(active).prev().click();
-        } else if(e.which == 40) { // Up
+        } else if(e.which == 40 || e.which == 74) { // Up
             $(active).next().click();
         }
     });
@@ -130,7 +130,7 @@ select option {
 </head>
 <body>
 
-<form onsubmit="render_blend(); return false;">
+<form onsubmit="render_blend(); $('#color-blended').select(); return false;">
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
@@ -138,7 +138,7 @@ select option {
             ColorBlendy
         </h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
-            <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend();" /></p>
+            <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend();" tabindex="1" /></p>
         </div>
         <div id="color-blended-preview">
             <p><input type="text" id="color-blended" value="#444b52" readonly="readonly" /></p>
@@ -152,7 +152,7 @@ select option {
         </div>
     </div>
     <div id="color-top-preview">
-        <p><input type="text" id="color-top" value="#333333" onchange="render_blend();" /></p>
+        <p><input type="text" id="color-top" value="#333333" onchange="render_blend();" tabindex="2" /></p>
     </div>
 </div>
 
