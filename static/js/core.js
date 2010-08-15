@@ -45,20 +45,23 @@ function apply_filter(c1, c2, fn) {
 }
 
 var blend_filters = {
-    multiply: function(c1, c2) {
-        return (c1*c2)/255;
+    multiply: function(bg, fg) {
+        return (fg*bg)/255;
     },
-    screen: function(c1, c2) {
-        return 255 - (((255-c1)*(255-c2)) >> 8);
+    screen: function(bg, fg) {
+        return 255 - (((255-fg)*(255-bg)) >> 8);
     },
-    overlay: function(c1, c2) {
-        return (c2 < 128) ? (2 * c1 * c2 / 255) : (255 - 2 * (255 - c2) * (255 - c1) / 255);
+    overlay: function(bg, fg) {
+        return (bg < 128) ? (2 * fg * bg / 255) : (255 - 2 * (255 - bg) * (255 - fg) / 255);
     },
-    dodge: function(c1, c2) {
-        return c2 == 255 ? c2 : Math.min(255, (c1 << 8) / (255 - c2));
+    dodge: function(bg, fg) {
+        return bg == 255 ? bg : Math.min(255, (fg << 8) / (255 - bg));
     },
-    burn: function(c1, c2) {
-        return c2 == 0 ? c2 : Math.max(0, (255 - ((255-c1) << 8) / c2));
+    burn: function(bg, fg) {
+        return bg == 0 ? bg : Math.max(0, (255 - ((255-fg) << 8) / bg));
+    },
+    negate: function(bg, fg) {
+        return 255 - Math.abs(255 - bg - fg);
     }
 }
 
