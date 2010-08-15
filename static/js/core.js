@@ -42,22 +42,24 @@ function apply_filter(c1, c2, fn) {
 
 var blend_filters = {
     multiply: function(c1, c2) {
+        // (B * L) / 255
         return (c1*c2)/255;
     },
-    divide: function(c1, c2) {
-        return (256*c2)/(c1+1);
-    },
     screen: function(c1, c2) {
-        return 255 - ((255-c1)*(255-c2))/255;
+        // (255 - (((255 - B) * (255 - L)) >> 8))
+        return 255 - ((255-c1)*(255-c2)) >> 8;
     },
     overlay: function(c1, c2) {
-        return (c2/255)*(c2+(2*c1)/255)*(255-c2);
+        //((L < 128) ? (2 * B * L / 255):(255 - 2 * (255 - B) * (255 - L) / 255)))
+        return (c2 < 128) ? (2 * c1 * c2 / 255) : (255 - 2 * (255 - c2) * (255 - c1) / 255);
     },
     dodge: function(c1, c2) {
-        return (c2*256)/(256-c1);
+        // (L == 255) ? L:min(255, ((B << 8 ) / (255 - L)))
+        return c2 == 255 ? c2 : Math.min(255, (c1 << 8) / (255 - c2));
     },
     burn: function(c1, c2) {
-        return 255 - (((255-c2)*256)/(c1+1));
+        // (L == 0) ? L:max(0, (255 - ((255 - B) << 8 ) / L))
+        return c2 == 0 ? c2 : Math.max(0, (255 - ((255-c1) << 8) / c2));
     }
 }
 
@@ -65,9 +67,12 @@ function blend(filter, c1, c2) {
     var c = apply_filter(c1, c2, blend_filters[filter])
 
     // Normalize colors
-    var max = Math.max(c[0], c[1], c[2]);
+    var max = Math.max(c[0], c[1], c[2], 255);
+    console.log(max);
 
-    return $.map(c, function(o) { return Math.round((o/max)*255)})
+    var r = $.map(c, function(o) { return Math.round((o/max)*255)})
+    console.log(c1 + " " + filter + " " + c2 + " = " + r);
+    return r;
 }
 
 
