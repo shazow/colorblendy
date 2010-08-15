@@ -30,14 +30,6 @@ function rgb_to_css(rgb) {
     return 'rgb(' + rgb[0] + ',' + rgb[1] +',' + rgb[2] + ')';
 }
 
-function color_opacity(c1, opacity) {
-    return [
-        Math.round((c1[0] * opacity)),
-        Math.round((c1[1] * opacity)),
-        Math.round((c1[2] * opacity)),
-    ]
-}
-
 function apply_filter(c1, c2, fn) {
     return [fn(c1[0], c2[0]),
             fn(c1[1], c2[1]),
@@ -67,7 +59,7 @@ var blend_filters = {
 
 function blend(filter, c1, c2) {
     var c = apply_filter(c1, c2, blend_filters[filter])
-    return $.map(c, function(o) { return Math.min(Math.round(o), 255); })
+    return $.map(c, function(o) { return Math.min(o, 255); })
 }
 
 
