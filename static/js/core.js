@@ -1,3 +1,7 @@
+function assure_hash_prefix(s) {
+    if(s[0] == '#') return s;
+    return '#' + s;
+}
 function hex_to_rgb(hex) {
     /* "FFFFFF" -> [255,255,255] */
     if(hex[0] == '#') {
@@ -67,8 +71,8 @@ function blend(filter, c1, c2) {
 function render_blend() {
     var blend_mode = $("#blend-mode li.active").text().toLowerCase();
 
-    $("#color-bottom-preview").css('background-color', $("#color-bottom").val());
-    $("#color-top-preview").css('background-color', $("#color-top").val());
+    $("#color-bottom-preview").css('background-color', assure_hash_prefix($("#color-bottom").val()));
+    $("#color-top-preview").css('background-color', assure_hash_prefix($("#color-top").val()));
 
     var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));
     var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
