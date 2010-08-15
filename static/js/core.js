@@ -59,7 +59,7 @@ var blend_filters = {
 
 function blend(filter, c1, c2) {
     var c = apply_filter(c1, c2, blend_filters[filter])
-    return $.map(c, function(o) { return Math.min(Math.round(o), 255); })
+    return [Math.min(Math.round(c[0]), 255), Math.min(Math.round(c[1]), 255), Math.min(Math.round(c[2]), 255)];
 }
 
 
