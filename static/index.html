@@ -12,11 +12,23 @@
 <script type="text/javascript" src="js/core.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+    var active = $("#blend-mode li.active");
+    $("#blend-mode li").click(function(e) {
+        if(active) $(active).removeClass('active');
+        active = $(this).addClass('active');
+        render_blend();
+    });
+    $(document).keydown(function(e) {
+        if(e.which == 38) { // Down
+            $(active).prev().click();
+        } else if(e.which == 40) { // Up
+            $(active).next().click();
+        }
+    });
 });
 </script>
 
 <style type="text/css">
-
 
 html {
     background-color:#000;

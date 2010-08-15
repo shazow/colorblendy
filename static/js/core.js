@@ -65,7 +65,7 @@ function blend(filter, c1, c2) {
 
 
 function render_blend() {
-    var blend_mode = $("#blend-mode").val();
+    var blend_mode = $("#blend-mode li.active").text().toLowerCase();
 
     $("#color-bottom-preview").css('background-color', $("#color-bottom").val());
     $("#color-top-preview").css('background-color', $("#color-top").val());
