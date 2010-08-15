@@ -1,3 +1,11 @@
+/* IE patch. :( */
+if(typeof String.prototype.trim !== 'function') {
+    String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g, '');
+    }
+}
+/***/
+
 function assure_hash_prefix(s) {
     if(s[0] == '#' || !(/^[\dabcdef]{3,6}$/).test(s)) return s;
     return '#' + s;
@@ -21,7 +29,8 @@ function rgb_to_hex(rgb) {
 }
 
 function css_to_rgb(s) {
-    /* "rgb(255, 255, 255)" -> [255,255,255] */
+    /* "rgb(255, 255, 255)" or "#ffffff" -> [255,255,255] */
+    if(s[0] == '#') return hex_to_rgb(s); // NOTE: IE8 does not always return rgb
     return $.map(s.substring(4,s.length-1).split(','), function(o) { return parseInt(o.trim()) });
 }
 
