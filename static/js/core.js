@@ -45,7 +45,7 @@ var blend_filters = {
         return (c1*c2)/255;
     },
     screen: function(c1, c2) {
-        return 255 - ((255-c1)*(255-c2)) >> 8;
+        return 255 - (((255-c1)*(255-c2)) >> 8);
     },
     overlay: function(c1, c2) {
         return (c2 < 128) ? (2 * c1 * c2 / 255) : (255 - 2 * (255 - c2) * (255 - c1) / 255);
@@ -65,24 +65,17 @@ function blend(filter, c1, c2) {
 
 
 function render_blend() {
-    var c1e = $("#color-1");
-    var c2e = $("#color-2");
-    var t = $("#color-blended");
     var blend_mode = $("#blend-mode").val();
 
-    var c1 = css_to_rgb(c1e.css('background-color'));
-    var c2 = css_to_rgb(c2e.css('background-color'));
+    $("#color-bottom-preview").css('background-color', $("#color-bottom").val());
+    $("#color-top-preview").css('background-color', $("#color-top").val());
+
+    var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));
+    var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
     var blended = blend(blend_mode, c1, c2);
 
-    $("#current-color-1").val("#" + rgb_to_hex(c1));
-    $("#current-color-2").val("#" + rgb_to_hex(c2));
-    $("#current-blend").val("#" + rgb_to_hex(blended));
+    console.log(c1 + " " + blend_mode + " " + c2 + " = " + blended);
 
-    t.css('background-color', rgb_to_css(blended));
-}
-
-function add_color(form) {
-    var color = $("input.color-input", form).val();
-    var unit = $('<div class="color-unit color-draggable"></div>').css('background-color', color).draggable({helper: 'clone'});
-    $("#palette").append(unit);
+    $("#color-blended-preview").css('background-color', rgb_to_css(blended));
+    $("#color-blended").val("#" + rgb_to_hex(blended));
 }

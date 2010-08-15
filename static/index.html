@@ -48,7 +48,7 @@ select, input {
     ColorBlendy
 </div>
 
-<form onsubmit="return false;">
+<form onsubmit="render_blend(); return false;">
 
 <div style="height: 500px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
@@ -58,7 +58,7 @@ select, input {
         <div id="color-blended-preview">
             <p><input type="text" id="color-blended" value="#999999" /></p>
             <p>
-                <select onchange="render_blend()" size="6">
+                <select onchange="render_blend()" size="6" id="blend-mode">
                     <option value="multiply" selected="selected">Multiply</option>
                     <option value="screen">Screen</option>
                     <option value="overlay">Overlay</option>
