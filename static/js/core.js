@@ -74,14 +74,17 @@ function blend(filter, c1, c2) {
 
 function render_blend() {
     var blend_mode = $("#blend-mode li.active").text().toLowerCase();
+    try {
+        $("#color-bottom-preview").css('background-color', assure_hash_prefix($("#color-bottom").val()));
+        $("#color-top-preview").css('background-color', assure_hash_prefix($("#color-top").val()));
 
-    $("#color-bottom-preview").css('background-color', assure_hash_prefix($("#color-bottom").val()));
-    $("#color-top-preview").css('background-color', assure_hash_prefix($("#color-top").val()));
+        var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));
+        var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
+        var blended = blend(blend_mode, c1, c2);
 
-    var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));
-    var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
-    var blended = blend(blend_mode, c1, c2);
-
-    $("#color-blended-preview").css('background-color', rgb_to_css(blended));
-    $("#color-blended").val("#" + rgb_to_hex(blended));
+        $("#color-blended-preview").css('background-color', rgb_to_css(blended));
+        $("#color-blended").val("#" + rgb_to_hex(blended));
+    } catch(err) {
+        alert("Unsupported color format.");
+    }
 }
