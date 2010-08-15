@@ -1,3 +1,19 @@
+<!--
+
+Protips:
+
+* You can use keyboard shortcuts to change blend modes (arrow keys or j/k).
+* Hitting <Enter> in a color input will select the blended color output
+  for convenient copying/pasting.
+* You can use any CSS-supported color input, such as:
+    * rgb(42,0,0)
+    * rgba(255,255,50,0.8)
+    * #eee
+    * blue
+
+I know, awesome, right? You should retweet it.
+
+-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
@@ -10,7 +26,7 @@
 
 <link rel="icon" type="image/png" href="icon.png" />
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/core.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -153,7 +169,7 @@ select option {
 </head>
 <body>
 
-<form onsubmit="render_blend(); $('#color-blended').select(); return false;">
+<form onsubmit="render_blend(); $('#color-blended').select(); return false;" action="#">
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
