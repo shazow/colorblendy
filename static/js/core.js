@@ -74,8 +74,6 @@ function render_blend() {
     var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
     var blended = blend(blend_mode, c1, c2);
 
-    console.log(c1 + " " + blend_mode + " " + c2 + " = " + blended);
-
     $("#color-blended-preview").css('background-color', rgb_to_css(blended));
     $("#color-blended").val("#" + rgb_to_hex(blended));
 }
