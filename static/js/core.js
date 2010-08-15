@@ -1,5 +1,5 @@
 function assure_hash_prefix(s) {
-    if(s[0] == '#' || s[0] == 'r') return s;
+    if(s[0] == '#' || !(/^[\dabcdef]{3,6}$/).test(s)) return s;
     return '#' + s;
 }
 function hex_to_rgb(hex) {
