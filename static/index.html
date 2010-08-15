@@ -32,6 +32,9 @@ h1 {
     letter-spacing:0.2em;
     color:#fff;
     font-size:0.8em;
+    color: #444b52;
+
+    line-height:50px; height:50px; margin:0; float:right; width:50%;
 }
 
 select, input {
@@ -57,7 +60,7 @@ select option {
 }
 #color-bottom-preview {
     float: left; width: 66.6%; height: 100%;
-    background: #aaa;
+    background: #abc;
 
     -webkit-border-top-right-radius: 20px;
     -webkit-border-bottom-right-radius: 20px;
@@ -69,11 +72,11 @@ select option {
 
 #color-top-preview {
     float: left; width: 33.3%; height: 82%; margin: 50px 0 0 0;
-    background: #eee;
+    background: #333;
 }
 #color-blended-preview {
     float: right; width: 50%; min-width: 200px; height: 82%; margin: 0 0 0 0;
-    background: #999;
+    background: #444b52;
 
     -webkit-border-top-left-radius: 20px;
     -webkit-border-bottom-left-radius: 20px;
@@ -92,14 +95,14 @@ select option {
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
-        <h1 style="line-height:50px; height:50px; margin:0; float:right; width:50%;">
+        <h1>
             ColorBlendy
         </h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
-            <p><input type="text" id="color-bottom" value="#aaaaaa" /></p>
+            <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend();" /></p>
         </div>
         <div id="color-blended-preview">
-            <p><input type="text" id="color-blended" value="#999999" /></p>
+            <p><input type="text" id="color-blended" value="#444b52" readonly="readonly" /></p>
             <p>
                 <select onchange="render_blend()" size="6" id="blend-mode">
                     <option value="multiply" selected="selected">Multiply</option>
@@ -112,7 +115,7 @@ select option {
         </div>
     </div>
     <div id="color-top-preview">
-        <p><input type="text" id="color-top" value="#eeeeee" /></p>
+        <p><input type="text" id="color-top" value="#333333" onchange="render_blend();" /></p>
     </div>
 </div>
 
