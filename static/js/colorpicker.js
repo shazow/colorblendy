@@ -1,3 +1,6 @@
+// Original author: John Zila
+// Modified by: Andrey Petrov
+
 //
 // Set the color of the pixel in img at coordinates x and y to the color
 // provided
