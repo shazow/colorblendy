@@ -46,7 +46,6 @@ $(document).ready(function() {
         }
     });
     render_colorpicker($("#spectrumbar"), $("#pickersquare"), function(rgb) {
-        console.log(rgb);
         $("#color").css('background-color', rgb_to_css(rgb));
     });
 });
