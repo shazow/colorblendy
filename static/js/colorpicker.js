@@ -111,11 +111,11 @@ function drawFocusCircle(ctx,r,x,y,color) {
 
 var img, color;
 
-$(document).ready(function() {
+function render_colorpicker(spectrumbar, pickersquare, callback) {
     var e,s,loc=[0,0],col=0;
 
     // Generate the spectrum bar.
-    e = $("#spectrumbar").get(0);
+    e = $(spectrumbar).get(0);
     ctxb = e.getContext("2d");
 
     w = parseInt(e.getAttribute("width"));
@@ -126,7 +126,7 @@ $(document).ready(function() {
     ctxb.putImageData(m, 0, 0);
 
     // Generate the picker square.
-    e = $("#pickersquare").get(0);
+    e = $(pickersquare).get(0);
     ctx = e.getContext("2d");
 
     s = parseInt(e.getAttribute("width"));
@@ -141,10 +141,7 @@ $(document).ready(function() {
 
     var redrawPickerSquare = function() {
         var idx=(loc[0] + loc[1] * m.width) * 4;
-        var r=img.data[idx],
-            g=img.data[idx+1],
-            b=img.data[idx+2];
-        $("#color").css("background-color","rgb("+r+","+g+","+b+")");
+        callback([img.data[0], img.data[1], img.data[2]]);
         ctx.putImageData(img, 0, 0);
         drawFocusCircle(ctx, 6, loc[0], loc[1], "#ffffff");
         drawFocusCircle(ctx, 8, loc[0], loc[1], "#000000");
@@ -156,14 +153,14 @@ $(document).ready(function() {
     };
 
     var cfun = function(ev) {
-        os=$("#pickersquare").offset();
+        os=$(pickersquare).offset();
         loc[0]=ev.pageX - os.left;
         loc[1]=ev.pageY - os.top;
         redrawPickerSquare();
     };
 
     var calcSpectrumOffset = function(ev) {
-        os=$("#spectrumbar").offset();
+        os=$(spectrumbar).offset();
         col=(ev.pageX-os.left)/m.width;
         drawSpectrumBar(ctxb,m,col);
         regenRedrawPicker();
@@ -174,22 +171,22 @@ $(document).ready(function() {
     var sqDrag=false;
     var pDrag=false;
 
-    $("#pickersquare").click(cfun);
-    $("#pickersquare").mousedown(function(e) {
+    $(pickersquare).click(cfun);
+    $(pickersquare).mousedown(function(e) {
         sqDrag = true;
     });
-    $("#pickersquare").mousemove(function(e) {
+    $(pickersquare).mousemove(function(e) {
         if (sqDrag) {cfun(e);}
     });
-    $("#spectrumbar").click(calcSpectrumOffset);
-    $("#spectrumbar").mousedown(function(e) {
+    $(spectrumbar).click(calcSpectrumOffset);
+    $(spectrumbar).mousedown(function(e) {
         pDrag = true;
     });
-    $("#spectrumbar").mousemove(function(e) {
+    $(spectrumbar).mousemove(function(e) {
         if (pDrag) {calcSpectrumOffset(e);}
     });
     $(document).mouseup(function(e) {
         sqDrag = false;
         pDrag = false;
     });
-});
+}

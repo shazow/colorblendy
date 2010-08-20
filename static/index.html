@@ -45,6 +45,10 @@ $(document).ready(function() {
             $(active).next().click();
         }
     });
+    render_colorpicker($("#spectrumbar"), $("#pickersquare"), function(rgb) {
+        console.log(rgb);
+        $("#color").css('background-color', rgb_to_css(rgb));
+    });
 });
 </script>
 
@@ -52,6 +56,18 @@ $(document).ready(function() {
 <body>
 
 <form onsubmit="render_blend(); $('#color-blended').select(); return false;" action="#">
+
+<div>
+<canvas id="pickersquare" width="128" height="128"> 
+Shade Picker
+</canvas> 
+<br /> 
+<canvas id="spectrumbar" width="128" height="25px"> 
+Color Picker
+</canvas> 
+<br /> 
+<div id="color">&nbsp;</div> 
+</div>
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">
