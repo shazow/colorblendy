@@ -92,7 +92,10 @@ function drawSpectrumBar(ctx,m,x) {
     ctx.lineTo(parseInt(x*w),h);
     ctx.closePath();
     ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
     ctx.stroke();
 }
 
