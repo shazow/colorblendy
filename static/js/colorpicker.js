@@ -1,28 +1,28 @@
-function p(m, x, y, r, g, b) {
-    var i = (x + y * m.width) * 4;
-    m.data[i+0] = r;
-    m.data[i+1] = g;
-    m.data[i+2] = b;
-    m.data[i+3] = 0xff;
+function setPixel(img, x, y, r, g, b) {
+    var i = (x + y * img.width) * 4;
+    img.data[i+0] = r;
+    img.data[i+1] = g;
+    img.data[i+2] = b;
+    img.data[i+3] = 0xff;
 }
 
-function sg(m, cr, cg, cb) {
-    var i,j,r,g,b,s,f,x,y;
-    s=m.width;
-    f=256.0/s;
+function drawSquareGradient(img, rbase, gbase, bbase) {
+    var i,j,r,g,b,size,coeff,x,y;
+    size=img.width;
+    coeff=0x100/size;
 
-    for (i=0; i<s; i++) {
-        for (j=0; j<s; j++) {
+    for (i=0; i<size; i++) {
+        for (j=0; j<size; j++) {
             var ij=i-j;
-            r=parseInt(f*(ij+cr*j < 0 ? 0 : ij+cr*j));
-            g=parseInt(f*(ij+cg*j < 0 ? 0 : ij+cg*j));
-            b=parseInt(f*(ij+cb*j < 0 ? 0 : ij+cb*j));
-            p(m, i, j, r, g, b);
+            r=parseInt(coeff*(ij+rbase*j < 0 ? 0 : ij+rbase*j));
+            g=parseInt(coeff*(ij+gbase*j < 0 ? 0 : ij+gbase*j));
+            b=parseInt(coeff*(ij+bbase*j < 0 ? 0 : ij+bbase*j));
+            setPixel(img, i, j, r, g, b);
         }
     }
 }
 
-function xc(c, x, w) {
+function getSpectrumColor(color, x, w) {
     var f,v,t,n;
     f = 1.0/0x100;
     v = (x/w)*0x600;
@@ -45,78 +45,78 @@ function xc(c, x, w) {
         t=v-0x500;
         n=[1,0,1-f*t];
     }
-    c[0]=n[0];
-    c[1]=n[1];
-    c[2]=n[2];
+    color[0]=n[0];
+    color[1]=n[1];
+    color[2]=n[2];
 }
 
-function pb(cxb,m,x) {
-    var c=[0,0,0],f=256,w=m.width,h=m.height;
+function drawSpectrumBar(ctxb,m,x) {
+    var color=[0,0,0],f=0x100,w=m.width,h=m.height;
     for(i=0; i<w; i++) {
-        xc(c, i, w);
+        getSpectrumColor(color, i, w);
         for (j=0; j<h; j++) {
-            p(m, i, j, c[0]*f, c[1]*f, c[2]*f);
+            setPixel(m, i, j, color[0]*f, color[1]*f, color[2]*f);
         }
     }
-    cxb.putImageData(m,0,0);
-    cxb.beginPath();
-    cxb.moveTo(parseInt(x*w),0);
-    cxb.lineTo(parseInt(x*w),h);
-    cxb.closePath();
-    cxb.strokeStyle = "#000000";
-    cxb.lineWidth = 3;
-    cxb.stroke();
+    ctxb.putImageData(m,0,0);
+    ctxb.beginPath();
+    ctxb.moveTo(parseInt(x*w),0);
+    ctxb.lineTo(parseInt(x*w),h);
+    ctxb.closePath();
+    ctxb.strokeStyle = "#000000";
+    ctxb.lineWidth = 3;
+    ctxb.stroke();
 }
 
-function dot(cx,r,x,y,co) {
-    cx.beginPath();
-    cx.arc(x,y,r,0,Math.PI*2,true);
-    cx.closePath();
-    cx.strokeStyle = co;
-    cx.lineWidth = 2;
-    cx.stroke();
+function drawFocusCircle(ctx,r,x,y,co) {
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2,true);
+    ctx.closePath();
+    ctx.strokeStyle = co;
+    ctx.lineWidth = 2;
+    ctx.stroke();
 }
 
-var img, c;
+var img, color;
 
 $(document).ready(function() {
     var e,s,loc=[0,0],col=0;
 
     e = $("#pickerbase").get(0);
-    cxb = e.getContext("2d");
+    ctxb = e.getContext("2d");
 
     w = parseInt(e.getAttribute("width"));
     h = parseInt(e.getAttribute("height"));
 
-    m = cxb.createImageData(w, h);
-    pb(cxb,m,col);
-    cxb.putImageData(m, 0, 0);
+    m = ctxb.createImageData(w, h);
+    drawSpectrumBar(ctxb,m,col);
+    ctxb.putImageData(m, 0, 0);
 
     e = $("#pickersquare").get(0);
-    cx = e.getContext("2d");
+    ctx = e.getContext("2d");
 
     s = parseInt(e.getAttribute("width"));
 
-    img = cx.createImageData(s, s);
+    img = ctx.createImageData(s, s);
 
-    var tfun = function(o) {
-        var c=[];
-        xc(c,o,1);
-        sg(img,c[0],c[1],c[2]);
+    var tfun = function(coeff) {
+        var color=[];
+        getSpectrumColor(color,coeff,1);
+        drawSquareGradient(img,color[0],color[1],color[2]);
     }
 
-    var rfun = function(e) {
-        var i=(loc[0] + loc[1] * m.width) * 4;
-        var r=img.data[i],
-            g=img.data[i+1],
-            b=img.data[i+2];
+    var rfun = function() {
+        var idx=(loc[0] + loc[1] * m.width) * 4;
+        var r=img.data[idx],
+            g=img.data[idx+1],
+            b=img.data[idx+2];
         $("#color").css("background-color","rgb("+r+","+g+","+b+")");
-        cx.putImageData(img, 0, 0);
-        dot(cx, 6, loc[0], loc[1], "#ffffff");
-        dot(cx, 8, loc[0], loc[1], "#000000");
+        ctx.putImageData(img, 0, 0);
+        drawFocusCircle(ctx, 6, loc[0], loc[1], "#ffffff");
+        drawFocusCircle(ctx, 8, loc[0], loc[1], "#000000");
     };
 
-    var trfun = function(e) {
+    var trfun = function() {
         tfun(col); rfun();
     };
 
@@ -127,10 +127,10 @@ $(document).ready(function() {
         rfun();
     };
 
-    var pc = function(ev) {
+    var calcSpectrumOffset = function(ev) {
             os=$("#pickerbase").offset();
             col=(ev.pageX-os.left)/m.width;
-            pb(cxb,m,col);
+            drawSpectrumBar(ctxb,m,col);
             trfun();
         };
 
@@ -146,12 +146,12 @@ $(document).ready(function() {
     $("#pickersquare").mousemove(function(e) {
         if (sqDrag) {cfun(e);}
     });
-    $("#pickerbase").click(pc);
+    $("#pickerbase").click(calcSpectrumOffset);
     $("#pickerbase").mousedown(function(e) {
         pDrag = true;
     });
     $("#pickerbase").mousemove(function(e) {
-        if (pDrag) {pc(e);}
+        if (pDrag) {calcSpectrumOffset(e);}
     });
     $(document).mouseup(function(e) {
         sqDrag = false;
