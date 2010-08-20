@@ -42,26 +42,14 @@ function generatePickerSquare(img, rbase, gbase, bbase) {
 // permutations satisfying this requirement are in the spectrum
 //
 function getSpectrumColor(color, x) {
-    var t,n;
-    t = x*6.0;
-    if (t<1) {
-        t=t;
-        n=[1,t,0];
-    } else if (t<2) {
-        t=t-1.0;
-        n=[1-t,1,0];
-    } else if (t<3) {
-        t=t-2.0;
-        n=[0,1,t];
-    } else if (t<4) {
-        t=t-3.0;
-        n=[0,1-t,1];
-    } else if (t<5) {
-        t=t-4.0;
-        n=[t,0,1];
-    } else {
-        t=t-5.0;
-        n=[1,0,1-t];
+    var n, t = x*6.0, v = Math.floor(t);
+    switch(v%6) {
+        case 0: n=[1,t,0]; break;
+        case 1: n=[2-t,1,0]; break;
+        case 2: n=[0,1,t-2]; break;
+        case 3: n=[0,4-t,1]; break;
+        case 4: n=[t-4,0,1]; break;
+        case 5: n=[1,0,6-t]; break;
     }
     color[0]=n[0];
     color[1]=n[1];
@@ -110,6 +98,10 @@ function drawFocusCircle(ctx,r,x,y,color) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 2;
     ctx.stroke();
+}
+
+function attach_colorpicker(t) {
+
 }
 
 function render_colorpicker(spectrumbar, pickersquare, callback) {
