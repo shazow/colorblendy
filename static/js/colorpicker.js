@@ -112,8 +112,6 @@ function drawFocusCircle(ctx,r,x,y,color) {
     ctx.stroke();
 }
 
-var img, color;
-
 function render_colorpicker(spectrumbar, pickersquare, callback) {
     var e,s,loc=[0,0],col=0;
 
@@ -134,7 +132,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
 
     s = parseInt(e.getAttribute("width"));
 
-    img = ctx.createImageData(s, s);
+    var img = ctx.createImageData(s, s);
 
     var regeneratePickerSquare = function(coeff) {
         var color=[];
@@ -144,7 +142,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
 
     var redrawPickerSquare = function() {
         var idx=(loc[0] + loc[1] * m.width) * 4;
-        callback([img.data[0], img.data[1], img.data[2]]);
+        callback([img.data[idx], img.data[idx+1], img.data[idx+2]]);
         ctx.putImageData(img, 0, 0);
         drawFocusCircle(ctx, 6, loc[0], loc[1], "#ffffff");
         drawFocusCircle(ctx, 8, loc[0], loc[1], "#000000");
