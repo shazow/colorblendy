@@ -45,8 +45,15 @@ $(document).ready(function() {
             $(active).next().click();
         }
     });
-    render_colorpicker($("#spectrumbar"), $("#pickersquare"), function(rgb) {
-        $("#color").css('background-color', rgb_to_css(rgb));
+    attach_colorpicker($("#color-bottom"), function(rgb) {
+        $("#color-bottom-preview").css('background-color', rgb_to_css(rgb));
+        $("#color-bottom").val("#" + rgb_to_hex(rgb));
+        render_blend();
+    });
+    attach_colorpicker($("#color-top"), function(rgb) {
+        $("#color-top-preview").css('background-color', rgb_to_css(rgb));
+        $("#color-top").val("#" + rgb_to_hex(rgb));
+        render_blend();
     });
 });
 </script>
@@ -55,18 +62,6 @@ $(document).ready(function() {
 <body>
 
 <form onsubmit="render_blend(); $('#color-blended').select(); return false;" action="#">
-
-<div>
-<canvas id="pickersquare" width="128" height="128"> 
-Shade Picker
-</canvas> 
-<br /> 
-<canvas id="spectrumbar" width="128" height="25px"> 
-Color Picker
-</canvas> 
-<br /> 
-<div id="color">&nbsp;</div> 
-</div>
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview">

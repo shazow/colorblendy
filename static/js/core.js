@@ -92,7 +92,6 @@ function blend(filter, c1, c2) {
     return [Math.min(Math.round(c[0]), 255), Math.min(Math.round(c[1]), 255), Math.min(Math.round(c[2]), 255)];
 }
 
-
 function render_blend() {
     var blend_mode = $("#blend-mode li.active").text().toLowerCase();
     try {

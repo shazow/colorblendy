@@ -100,8 +100,12 @@ function drawFocusCircle(ctx,r,x,y,color) {
     ctx.stroke();
 }
 
-function attach_colorpicker(t) {
-
+function attach_colorpicker(t, callback) {
+    var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
+    var spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
+    var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
+    $(t).after(box);
+    render_colorpicker(spectrum, picker, callback);
 }
 
 function render_colorpicker(spectrumbar, pickersquare, callback) {
