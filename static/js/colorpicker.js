@@ -112,23 +112,15 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
     var e,s,loc=[0,0],col=0;
 
     // Generate the spectrum bar.
-    e = $(spectrumbar).get(0);
-    ctxb = e.getContext("2d");
+    var ctxb = spectrumbar[0].getContext("2d");
+    m = ctxb.createImageData(spectrumbar.width(), spectrumbar.height());
 
-    w = parseInt(e.getAttribute("width"));
-    h = parseInt(e.getAttribute("height"));
-
-    m = ctxb.createImageData(w, h);
-    drawSpectrumBar(ctxb,m,col);
+    drawSpectrumBar(ctxb, m, col);
     ctxb.putImageData(m, 0, 0);
 
     // Generate the picker square.
-    e = $(pickersquare).get(0);
-    ctx = e.getContext("2d");
-
-    s = parseInt(e.getAttribute("width"));
-
-    var img = ctx.createImageData(s, s);
+    var ctx = pickersquare[0].getContext("2d");
+    var img = ctx.createImageData(pickersquare.width(), pickersquare.height());
 
     var regeneratePickerSquare = function(coeff) {
         var color=[];
