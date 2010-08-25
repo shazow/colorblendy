@@ -13,77 +13,67 @@ function setPixel(img, x, y, r, g, b) {
     img.data[i+3] = 0xff;
 }
 
+function ctx_xy_to_rgb(ctx, xy) {
+    var img=ctx.getImageData(xy[0],xy[1],1,1);
+    return [img.data[0], img.data[1], img.data[2]];
+}
+
 //
 // Accepts a "base" color and builds a square gradient with that color, black,
 // and white.
 //
-function generatePickerSquare(img, rbase, gbase, bbase) {
-    var i,j,r,g,b,size,coeff,x,y;
-    size=img.width;
-    coeff=0x100/size;
+function generatePickerSquare(ctx, rgb) {
+    var w=ctx.canvas.width, h=ctx.canvas.height;
 
-    for (i=0; i<size; i++) {
-        for (j=0; j<size; j++) {
-            var ij=i-j;
-            r=parseInt(coeff*(ij+rbase*j < 0 ? 0 : ij+rbase*j));
-            g=parseInt(coeff*(ij+gbase*j < 0 ? 0 : ij+gbase*j));
-            b=parseInt(coeff*(ij+bbase*j < 0 ? 0 : ij+bbase*j));
-            setPixel(img, i, j, r, g, b);
-        }
+    var gradients = [
+        ["#ffffff","#ffffff"],
+        [rgb_a_to_css(rgb, 0),rgb_a_to_css(rgb, 0xff)],
+        [rgb_a_to_css([0,0,0], 1),rgb_a_to_css([0,0,0], 0)]
+    ];
+    var locs = [
+        [0,0,w,0],
+        [0,0,0,h],
+        [0,0,w,0]
+    ];
+    for (i=0; i<3; i++) {
+        var gradient = ctx.createLinearGradient(locs[i][0],locs[i][1],locs[i][2],locs[i][3]);
+        gradient.addColorStop(0,gradients[i][0]);
+        gradient.addColorStop(1,gradients[i][1]);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0,0,w,h);
     }
 }
 
 //
-// Given a coefficient x in the range [0,1), calculate the color in the rainbow
-// spectrum that should appear at that spot.
-//
-// The rule for the calculation is that at least 1 color must be at 100% at all
-// times, but no more than 2 colors are active at any one time, and all
-// permutations satisfying this requirement are in the spectrum
-//
-function getSpectrumColor(color, x) {
-    var n, t = x*6.0, v = Math.floor(t);
-    switch(v%6) {
-        case 0: n=[1,t,0]; break;
-        case 1: n=[2-t,1,0]; break;
-        case 2: n=[0,1,t-2]; break;
-        case 3: n=[0,4-t,1]; break;
-        case 4: n=[t-4,0,1]; break;
-        case 5: n=[1,0,6-t]; break;
-    }
-    color[0]=n[0];
-    color[1]=n[1];
-    color[2]=n[2];
-}
-
-//
-// Given a canvas context ctx, a pixel array m, and an active location x in the
+// Given a canvas context ctx and an active location x in the
 // range [0,1), draw the spectrum bar on the canvas and put a black line at
 // location x.
 //
-function drawSpectrumBar(ctx,m,x) {
-    var color=[0,0,0],factor=0x100,w=m.width,h=m.height;
-    // Loop through the canvas
-    for(i=0; i<w; i++) {
-        // Get the color that should be at this location
-        getSpectrumColor(color, i/w);
-        for (j=0; j<h; j++) {
-            setPixel(m, i, j, color[0]*factor, color[1]*factor, color[2]*factor);
-        }
+function drawSpectrumBar(ctx,x) {
+    var w=ctx.canvas.width, h=ctx.canvas.height, xw=Math.floor(x*w);
+    var gradient=ctx.createLinearGradient(0,0,w,0),sw=1.0/6;
+    var colors=[
+        "#FF0000",
+        "#FFFF00",
+        "#00FF00",
+        "#00FFFF",
+        "#0000FF",
+        "#FF00FF"
+    ];
+    var locs=[0,sw,2*sw,3*sw,4*sw,5*sw,6*sw];
+    for (i=0; i<7; i++) {
+        gradient.addColorStop(locs[i], colors[i%6]);
     }
-    // Render the image array to the canvas.
-    ctx.putImageData(m,0,0);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0,0,w,h);
 
     // Draw the line.
     ctx.beginPath();
-    ctx.moveTo(parseInt(x*w),0);
-    ctx.lineTo(parseInt(x*w),h);
+    ctx.moveTo(xw,0);
+    ctx.lineTo(xw,h);
     ctx.closePath();
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = rgb_to_css(invert_rgb(ctx_xy_to_rgb(ctx, [xw,0])));
     ctx.lineWidth = 4;
-    ctx.stroke();
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2;
     ctx.stroke();
 }
 
@@ -96,9 +86,27 @@ function drawFocusCircle(ctx,r,x,y,color) {
     ctx.arc(x,y,r,0,Math.PI*2,true);
     ctx.closePath();
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 }
+
+function fillFocusCircle(ctx,r,x,y,color) {
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2,true);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+}
+
+function clip(x,y,w,h) {
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x >= w) x = w-1;
+    if (y >= h) y = h-1;
+    return [x,y];
+}
+
+/***/
 
 function attach_colorpicker(t, callback) {
     var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
@@ -108,54 +116,79 @@ function attach_colorpicker(t, callback) {
     render_colorpicker(spectrum, picker, callback);
 }
 
+$(document).ready(function() {
+
+    $(function(){
+        $.extend($.fn.disableTextSelect = function() {
+            return this.each(function(){
+                if($.browser.mozilla){//Firefox
+                    $(this).css('MozUserSelect','none');
+                }else if($.browser.msie){//IE
+                    $(this).bind('selectstart',function(){return false;});
+                }else{//Opera, etc.
+                    $(this).mousedown(function(){return false;});
+                }
+            });
+        });
+        $('body').disableTextSelect();
+    });
+
+});
+
+
+
 function render_colorpicker(spectrumbar, pickersquare, callback) {
-    var e,s,loc=[0,0],col=0;
+    var e,s,loc=[0,0],col=0,os;
 
     // Generate the spectrum bar.
     var ctxb = spectrumbar[0].getContext("2d");
-    m = ctxb.createImageData(spectrumbar.width(), spectrumbar.height());
+    var w=spectrumbar.width(), h=spectrumbar.height();
 
-    drawSpectrumBar(ctxb, m, col);
-    ctxb.putImageData(m, 0, 0);
+    drawSpectrumBar(ctxb, col);
 
     // Generate the picker square.
     var ctx = pickersquare[0].getContext("2d");
     var img = ctx.createImageData(pickersquare.width(), pickersquare.height());
 
-    var regeneratePickerSquare = function(coeff) {
-        var color=[];
-        getSpectrumColor(color,coeff,1);
-        generatePickerSquare(img,color[0],color[1],color[2]);
+    var colortextFocused = false;
+
+    var drawPickerSquare = function(coeff) {
+        var xy=[parseInt(coeff*(ctxb.canvas.width-1)), 0];
+        var rgb=invert_rgb(ctx_xy_to_rgb(ctxb, xy));
+        generatePickerSquare(ctx,rgb);
     }
 
-    var redrawPickerSquare = function() {
-        var idx=(loc[0] + loc[1] * m.width) * 4;
-        callback([img.data[idx], img.data[idx+1], img.data[idx+2]]);
-        ctx.putImageData(img, 0, 0);
+    var drawPickerCircle = function(ctx, loc) {
+        var rgb = ctx_xy_to_rgb(ctx, loc);
+        callback(rgb);
+
+        fillFocusCircle(ctx, 7, loc[0], loc[1], "#" + rgb_to_hex(rgb));
+        drawFocusCircle(ctx, 7.5, loc[0], loc[1], "#000000");
         drawFocusCircle(ctx, 6, loc[0], loc[1], "#ffffff");
-        drawFocusCircle(ctx, 8, loc[0], loc[1], "#000000");
     };
 
-    var regenRedrawPicker = function() {
-        regeneratePickerSquare(col);
-        redrawPickerSquare();
+    var redrawPicker = function(ctx,loc,col) {
+        drawPickerSquare(col);
+        drawPickerCircle(ctx,loc);
     };
 
     var cfun = function(ev) {
-        os=$(pickersquare).offset();
-        loc[0]=ev.pageX - os.left;
-        loc[1]=ev.pageY - os.top;
-        redrawPickerSquare();
+        os = $(pickersquare).offset();
+        loc = clip(ev.pageX-os.left,ev.pageY-os.top,ctx.canvas.width,ctx.canvas.height);
+        drawPickerSquare(col);
+        drawPickerCircle(ctx,loc);
     };
 
     var calcSpectrumOffset = function(ev) {
+        var w=ctxb.canvas.width, h=ctxb.canvas.height;
         os=$(spectrumbar).offset();
-        col=(ev.pageX-os.left)/m.width;
-        drawSpectrumBar(ctxb,m,col);
-        regenRedrawPicker();
+        var xy=clip(ev.pageX-os.left,ev.pageY-os.top,w,h);
+        col=(xy[0])/ctxb.canvas.width;
+        drawSpectrumBar(ctxb,col);
+        redrawPicker(ctx,loc,col);
     };
 
-    regenRedrawPicker();
+    redrawPicker(ctx,loc,col);
 
     var sqDrag=false;
     var pDrag=false;
@@ -172,6 +205,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
         pDrag = true;
     });
     $(spectrumbar).mousemove(function(e) {
+        if (sqDrag) {cfun(e);}
         if (pDrag) {calcSpectrumOffset(e);}
     });
     $(document).mouseup(function(e) {

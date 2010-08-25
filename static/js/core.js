@@ -30,8 +30,13 @@ function css_to_rgb(s) {
 }
 
 function rgb_to_css(rgb) {
-    /* [255,255,255] -> "rgb(255, 255, 255)" */
+    /* [255,255,255] -> "rgb(255,255,255)" */
     return 'rgb(' + rgb[0] + ',' + rgb[1] +',' + rgb[2] + ')';
+}
+
+function rgb_a_to_css(rgb, a) {
+    /* [255,255,255,0.5] -> "rgba(255,255,255,0.5)" */
+    return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
 }
 
 function rgb_to_hsv(rgb){
@@ -54,6 +59,11 @@ function rgb_to_hsv(rgb){
 
     return [h*255,s*255,v*255];
 }
+
+function invert_rgb(rgb) {
+    return [0xff - rgb[0], 0xff - rgb[1], 0xff - rgb[2]];
+}
+ 
 
 function apply_filter(c1, c2, fn) {
     return [fn(c1[0], c2[0]),
