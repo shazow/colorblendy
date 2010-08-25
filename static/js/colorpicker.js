@@ -148,9 +148,6 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
 
     // Generate the picker square.
     var ctx = pickersquare[0].getContext("2d");
-    var img = ctx.createImageData(pickersquare.width(), pickersquare.height());
-
-    var colortextFocused = false;
 
     var drawPickerSquare = function(coeff) {
         var xy=[parseInt(coeff*(ctxb.canvas.width-1)), 0];
@@ -197,14 +194,11 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
     $(pickersquare).mousedown(function(e) {
         sqDrag = true;
     });
-    $(pickersquare).mousemove(function(e) {
-        if (sqDrag) {cfun(e);}
-    });
     $(spectrumbar).click(calcSpectrumOffset);
     $(spectrumbar).mousedown(function(e) {
         pDrag = true;
     });
-    $(spectrumbar).mousemove(function(e) {
+    $(document).mousemove(function(e) {
         if (sqDrag) {cfun(e);}
         if (pDrag) {calcSpectrumOffset(e);}
     });
