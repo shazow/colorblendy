@@ -110,20 +110,29 @@ function clip(x,y,w,h) {
 
 var active_picker = false;
 
-function attach_colorpicker(t, callback) {
+function attach_colorpicker(t, preview, callback) {
     var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
     var spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
     var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
     $(t).after(box);
-    render_colorpicker(spectrum, picker, callback);
+    var controller = render_colorpicker(spectrum, picker, callback);
 
-    var focusfn = function(ev) {
-        ev.stopPropagation();
+    var focusfn = function(e) {
+        e.stopPropagation();
         $(t).select();
         if(active_picker) $(active_picker).hide();
         active_picker = $(box).show();
+
+        console.log(preview);
+        controller(css_to_rgb($(preview).css('background-color')));
     };
-    $(t).click(focusfn).focus(focusfn);
+    $(t).click(focusfn).focus(focusfn).keydown(function(e) {
+        if(e.which == 13) {
+            $(active_picker).hide();
+            active_picker = false;
+        }
+    });
+    return controller;
 }
 
 $(document).ready(function() {
@@ -206,4 +215,14 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
         sqDrag = false;
         pDrag = false;
     });
+
+    return function(rgb) {
+        var hsv=rgb_to_hsv(rgb);
+        col = (hsv[0]/0xff);
+        loc[0] = (hsv[2]/0xff)*ctx.canvas.width;
+        loc[1] = (hsv[1]/0xff)*ctx.canvas.height;
+        drawSpectrumBar(ctxb,col);
+        drawPickerSquare(col);
+        drawPickerCircle(ctx,loc);
+    }
 }

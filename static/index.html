@@ -46,12 +46,12 @@ $(document).ready(function() {
             $(active).next().click();
         }
     });
-    attach_colorpicker($("#color-bottom"), function(rgb) {
+    attach_colorpicker($("#color-bottom"), $("#color-bottom-preview"), function(rgb) {
         $("#color-bottom-preview").css('background-color', rgb_to_css(rgb));
         $("#color-bottom").val("#" + rgb_to_hex(rgb));
         render_blend();
     });
-    attach_colorpicker($("#color-top"), function(rgb) {
+    attach_colorpicker($("#color-top"), $("#color-top-preview"), function(rgb) {
         $("#color-top-preview").css('background-color', rgb_to_css(rgb));
         $("#color-top").val("#" + rgb_to_hex(rgb));
         render_blend();
@@ -66,14 +66,14 @@ $(document).ready(function() {
 <form onsubmit="render_blend(); $('#color-blended').select(); return false;" action="#">
 
 <div style="height: 550px; width: 100%; text-align: center;">
-    <div id="color-bottom-preview">
+    <div id="color-bottom-preview" class="preview">
         <h1>
             ColorBlendy
         </h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
             <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend();" tabindex="1" /></p>
         </div>
-        <div id="color-blended-preview">
+        <div id="color-blended-preview" class="preview">
             <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
             <ul id="blend-mode">
                 <li class="active">Multiply</li>
@@ -84,7 +84,7 @@ $(document).ready(function() {
             </ul>
         </div>
     </div>
-    <div id="color-top-preview">
+    <div id="color-top-preview" class="preview">
         <p><input type="text" id="color-top" value="#333333" onchange="render_blend();" tabindex="2" /></p>
     </div>
 </div>
