@@ -12,20 +12,15 @@ function assure_hash_prefix(s) {
 }
 function hex_to_rgb(hex) {
     /* "FFFFFF" -> [255,255,255] */
-    if(hex[0] == '#') {
-        hex = hex.substring(1,7);
-    }
+    if(hex[0] == '#') hex = hex.substring(1,7);
+    if(hex.length < 6) hex += "000000".substr(0,6-hex.length);
     return [parseInt(hex.substring (0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)]
 }
 
 function rgb_to_hex(rgb) {
     /* [255,255,255] -> "FFFFFF" */
     var r = (rgb[2] | (rgb[1] << 8) | (rgb[0] << 16)).toString(16);
-
-    // Pad 0's
-    for(var i=0, stop=6-r.length; i<stop; i++) r += "0";
-
-    return r;
+    return "000000".substr(0,6-r.length) + r;
 }
 
 function css_to_rgb(s) {
