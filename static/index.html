@@ -28,6 +28,7 @@ I know, awesome, right? You should retweet it.
 <link href="css/base.css" rel="stylesheet" type="text/css"/>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.disable.text.select.js"></script>
 <script type="text/javascript" src="js/core.js"></script>
 <script type="text/javascript" src="js/colorpicker.js"></script>
 <script type="text/javascript">
@@ -55,6 +56,7 @@ $(document).ready(function() {
         $("#color-top").val("#" + rgb_to_hex(rgb));
         render_blend();
     });
+    $("body").disableTextSelect();
 });
 </script>
 

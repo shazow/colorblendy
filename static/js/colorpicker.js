@@ -108,33 +108,31 @@ function clip(x,y,w,h) {
 
 /***/
 
+var active_picker = false;
+
 function attach_colorpicker(t, callback) {
     var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
     var spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
     var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
     $(t).after(box);
     render_colorpicker(spectrum, picker, callback);
+
+    var focusfn = function(ev) {
+        ev.stopPropagation();
+        $(t).select();
+        if(active_picker) $(active_picker).hide();
+        active_picker = $(box).show();
+    };
+    $(t).click(focusfn).focus(focusfn);
 }
 
 $(document).ready(function() {
-
-    $(function(){
-        $.extend($.fn.disableTextSelect = function() {
-            return this.each(function(){
-                if($.browser.mozilla){//Firefox
-                    $(this).css('MozUserSelect','none');
-                }else if($.browser.msie){//IE
-                    $(this).bind('selectstart',function(){return false;});
-                }else{//Opera, etc.
-                    $(this).mousedown(function(){return false;});
-                }
-            });
-        });
-        $('body').disableTextSelect();
+    $("body").click(function() {
+        if(!active_picker) return;
+        $(active_picker).hide();
+        active_picker = false;
     });
-
 });
-
 
 
 function render_colorpicker(spectrumbar, pickersquare, callback) {
@@ -170,6 +168,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
     };
 
     var cfun = function(ev) {
+        ev.stopPropagation();
         os = $(pickersquare).offset();
         loc = clip(ev.pageX-os.left,ev.pageY-os.top,ctx.canvas.width,ctx.canvas.height);
         drawPickerSquare(col);
@@ -177,6 +176,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
     };
 
     var calcSpectrumOffset = function(ev) {
+        ev.stopPropagation();
         var w=ctxb.canvas.width, h=ctxb.canvas.height;
         os=$(spectrumbar).offset();
         var xy=clip(ev.pageX-os.left,ev.pageY-os.top,w,h);
