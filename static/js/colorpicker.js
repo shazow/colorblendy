@@ -1,18 +1,6 @@
 // Original author: John Zila
 // Modified by: Andrey Petrov
 
-//
-// Set the color of the pixel in img at coordinates x and y to the color
-// provided
-//
-function setPixel(img, x, y, r, g, b) {
-    var i = (x + y * img.width) * 4;
-    img.data[i+0] = r;
-    img.data[i+1] = g;
-    img.data[i+2] = b;
-    img.data[i+3] = 0xff;
-}
-
 function ctx_xy_to_rgb(ctx, xy) {
     var img=ctx.getImageData(xy[0],xy[1],1,1);
     return [img.data[0], img.data[1], img.data[2]];
@@ -111,11 +99,13 @@ function clip(x,y,w,h) {
 var active_picker = false;
 
 function attach_colorpicker(t, preview, callback) {
+    var original_rgb = css_to_rgb($(preview).css('background-color'));
     var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
     var spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
     var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
     $(t).after(box);
     var controller = render_colorpicker(spectrum, picker, callback);
+    controller(original_rgb);
 
     var focusfn = function(e) {
         e.stopPropagation();
