@@ -186,8 +186,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
 
     redrawPicker(ctx,loc,col);
 
-    var sqDrag=false;
-    var pDrag=false;
+    var sqDrag=pDrag=false;
 
     $(pickersquare).click(cfun);
     $(pickersquare).mousedown(function(e) {
@@ -209,8 +208,7 @@ function render_colorpicker(spectrumbar, pickersquare, callback) {
     return function(rgb) {
         var hsv=rgb_to_hsv(rgb);
         col = (hsv[0]/0xff);
-        loc[0] = (hsv[2]/0xff)*ctx.canvas.width;
-        loc[1] = (hsv[1]/0xff)*ctx.canvas.height;
+        loc = [(hsv[2]/0xff)*ctx.canvas.width, (hsv[1]/0xff)*ctx.canvas.height];
         drawSpectrumBar(ctxb,col);
         drawPickerSquare(col);
         drawPickerCircle(ctx,loc);

@@ -113,3 +113,30 @@ function render_blend() {
         alert("Unsupported color format.");
     }
 }
+
+$(document).ready(function() {
+    var active = $("#blend-mode li.active");
+    $("#blend-mode li").click(function(e) {
+        if(active) $(active).removeClass('active');
+        active = $(this).addClass('active');
+        render_blend();
+    });
+    $(document).keydown(function(e) {
+        if(e.which == 38 || e.which == 75) { // Down
+            $(active).prev().click();
+        } else if(e.which == 40 || e.which == 74) { // Up
+            $(active).next().click();
+        }
+    });
+    attach_colorpicker($("#color-bottom"), $("#color-bottom-preview"), function(rgb) {
+        $("#color-bottom-preview").css('background-color', rgb_to_css(rgb));
+        $("#color-bottom").val("#" + rgb_to_hex(rgb));
+        render_blend();
+    });
+    attach_colorpicker($("#color-top"), $("#color-top-preview"), function(rgb) {
+        $("#color-top-preview").css('background-color', rgb_to_css(rgb));
+        $("#color-top").val("#" + rgb_to_hex(rgb));
+        render_blend();
+    });
+    $("body").disableTextSelect();
+});

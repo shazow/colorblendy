@@ -18,7 +18,7 @@ h1 {
     letter-spacing:0.2em;
 }
 
-select, input {
+input {
     font-size: 20px;
     width: 200px;
     text-align: center;
@@ -27,22 +27,7 @@ select, input {
     color:#888;
     border:0;
     outline:10px solid rgba(0,0,0,0.1);
-}
-
-input {
     font-family:monospace;
-}
-
-select {
-    padding:0;
-    height:185px;
-    width:215px;
-    margin-top:105px;
-    overflow: hidden;
-}
-
-select option {
-    padding:0.3em 0;
 }
 canvas {
     display: block;

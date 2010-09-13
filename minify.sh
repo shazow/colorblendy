@@ -3,7 +3,7 @@
 function get_size() {
     stat -f%z "$1"
 }
-target_files=(static/js/core.js static/js/colorpicker.js static/css/base.css)
+target_files=(static/js/core.js static/js/colorpicker.js static/js/jquery.disable.text.select.js static/css/base.css)
 minified=()
 
 old_total=0
