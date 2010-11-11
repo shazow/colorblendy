@@ -6,11 +6,14 @@ function ctx_xy_to_rgb(ctx, xy) {
     return [img.data[0], img.data[1], img.data[2]];
 }
 
+
+/* Canvas helpers */
+
 //
 // Accepts a "base" color and builds a square gradient with that color, black,
 // and white.
 //
-function generatePickerSquare(ctx, rgb) {
+var canvas_draw_gradient_square = function(ctx, rgb) {
     var w=ctx.canvas.width, h=ctx.canvas.height;
 
     var gradients = [
@@ -33,43 +36,10 @@ function generatePickerSquare(ctx, rgb) {
 }
 
 //
-// Given a canvas context ctx and an active location x in the
-// range [0,1), draw the spectrum bar on the canvas and put a black line at
-// location x.
-//
-function drawSpectrumBar(ctx,x) {
-    var w=ctx.canvas.width, h=ctx.canvas.height, xw=Math.floor(x*w);
-    var gradient=ctx.createLinearGradient(0,0,w,0),sw=1.0/6;
-    var colors=[
-        "#FF0000",
-        "#FFFF00",
-        "#00FF00",
-        "#00FFFF",
-        "#0000FF",
-        "#FF00FF"
-    ];
-    var locs=[0,sw,2*sw,3*sw,4*sw,5*sw,6*sw];
-    for (i=0; i<7; i++) {
-        gradient.addColorStop(locs[i], colors[i%6]);
-    }
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0,0,w,h);
-
-    // Draw the line.
-    ctx.beginPath();
-    ctx.moveTo(xw,0);
-    ctx.lineTo(xw,h);
-    ctx.closePath();
-    ctx.strokeStyle = rgb_to_css(invert_rgb(ctx_xy_to_rgb(ctx, [xw,0])));
-    ctx.lineWidth = 4;
-    ctx.stroke();
-}
-
-//
 // Draw a circle on the provided context with radius r, centered at (x,y), and
 // styled with the color string represented by color.
 //
-function drawFocusCircle(ctx,r,x,y,color) {
+var canvas_draw_circle = function(ctx, r, x, y, color) {
     ctx.beginPath();
     ctx.arc(x,y,r,0,Math.PI*2,true);
     ctx.closePath();
@@ -78,7 +48,7 @@ function drawFocusCircle(ctx,r,x,y,color) {
     ctx.stroke();
 }
 
-function fillFocusCircle(ctx,r,x,y,color) {
+var canvas_draw_filled_circle = function(ctx, r, x, y, color) {
     ctx.beginPath();
     ctx.arc(x,y,r,0,Math.PI*2,true);
     ctx.closePath();
@@ -86,176 +56,158 @@ function fillFocusCircle(ctx,r,x,y,color) {
     ctx.fill();
 }
 
-function clip(x,y,w,h) {
+
+function clip(x, y, w, h) {
     if (x < 0) x = 0;
     if (y < 0) y = 0;
     if (x >= w) x = w-1;
     if (y >= h) y = h-1;
-    return [x,y];
+    return [x, y];
 }
 
 /***/
 
-var active_picker = false;
-
-function attach_colorpicker(t, preview, callback) {
-    var original_rgb = css_to_rgb($(preview).css('background-color'));
-    var picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
-    var spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
-    var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
-    $(t).after(box);
-    var controller = render_colorpicker(spectrum, picker, callback);
-    controller(original_rgb);
-
-    var focusfn = function(e) {
-        e.stopPropagation();
-        $(t).select();
-        if(active_picker) $(active_picker).hide();
-        active_picker = $(box).show();
-
-        console.log(preview);
-        controller(css_to_rgb($(preview).css('background-color')));
-    };
-    $(t).click(focusfn).focus(focusfn).keydown(function(e) {
-        if(e.which == 13) {
-            $(active_picker).hide();
-            active_picker = false;
-        }
-    });
-    return controller;
-}
-
-$(document).ready(function() {
-    $("body").click(function() {
-        if(!active_picker) return;
-        $(active_picker).hide();
-        active_picker = false;
-    });
-});
-
-
 function ColorPicker(target) {
-
     this.picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
+    this.picker_canvas = this.picker[0].getContext("2d");
+    this.picker_pos = [0, 0];
+
     this.spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
+    this.spectrum_canvas = this.spectrum[0].getContext("2d");
+    this.spectrum_pos = 0;
 
-    var  = spectrumbar[0].getContext("2d");
+    this.container = $('<div class="color-picker"></div').append(this.picker).append(this.spectrum);
 
-    var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
+    $(target).after(this.container);
 
-    $(target).after(box);
-    var controller = render_colorpicker(spectrum, picker, callback);
-    controller(original_rgb);
+    this.draw();
 
-    var focusfn = function(e) {
-        e.stopPropagation();
-        $(target).select();
-        if(active_picker) $(active_picker).hide();
-        active_picker = $(box).show();
+    // Bind events
 
-        console.log(preview);
-    };
-    $(target).click(focusfn).focus(focusfn).keydown(function(e) {
-        if(e.which == 13) {
-            $(active_picker).hide();
-            active_picker = false;
+    var sqDrag = pDrag = false;
+
+    // -> Click
+    this.picker.click(
+        function(e) { return this._picker_select_event(e); }
+    ).mousedown(
+        function(e) { sqDrag = true; }
+    );
+
+    this.spectrum.click(
+        function(e) { return this._spectrum_select_event(e); }
+    ).mousedown(
+        function(e) { pDrag = true; }
+    );
+
+    // -> Drag
+    $(document).mousemove(
+        function(e) {
+            if (sqDrag) return this._picker_select_event(e);
+            if (pDrag) return this._spectrum_select_event(e);
         }
-    });
-    return controller;
+    ).mouseup(
+        function(e) {
+            sqDrag = false;
+            pDrag = false;
+        }
+    );
 }
 ColorPicker.prototype = {
+    add_listener: function(name, fn) {
+        this.container.bind(name, fn);
+    },
     set_color: function(rgb) {
+        var hsv = rgb_to_hsv(rgb);
 
+        this.spectrum_pos = (hsv[0]/0xff);
+        this.picker_pos = [(hsv[2]/0xff)*ctx.canvas.width, (hsv[1]/0xff)*this.spectrum_canvas.canvas.height];
+
+        this.draw();
     },
     get_color: function() {
-
+        return ctx_xy_to_rgb(this.spectrum_canvas, this.selected_pos);
     },
+    draw: function() {
+        this._draw_spectrum();
+        this._draw_picker();
+    },
+
+    // Draw helpers
+    // TODO: Move these out to a ColorPickerRenderEngine object?
+
     _draw_spectrum: function() {
+        var ctx = this.spectrum_canvas;
+
+        var w = ctx.canvas.width, h = ctx.canvas.height, xw = Math.floor(this.spectrum_pos*w);
+        var gradient = ctx.createLinearGradient(0, 0, w, 0), sw = 1.0/6;
+        var colors = [
+            "#FF0000",
+            "#FFFF00",
+            "#00FF00",
+            "#00FFFF",
+            "#0000FF",
+            "#FF00FF"
+        ];
+        var locs=[0,sw,2*sw,3*sw,4*sw,5*sw,6*sw];
+
+        for (var i=0; i<7; i++) {
+            gradient.addColorStop(locs[i], colors[i%6]);
+        }
+
+        // TODO: Move this out to a helper?
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+
+        // Draw the cursor line.
+        ctx.beginPath();
+        ctx.moveTo(xw,0);
+        ctx.lineTo(xw,h);
+        ctx.closePath();
+        ctx.strokeStyle = rgb_to_css(invert_rgb(ctx_xy_to_rgb(ctx, [xw, 0])));
+        ctx.lineWidth = 4;
+        ctx.stroke();
 
     },
     _draw_picker: function() {
+        var ctx = this.picker_canvas;
+        var pos = this.selected_pos;
 
+        // Draw the square
+        var xy = [parseInt(this.spectrum_pos*(ctx.canvas.width-1)), 0];
+        var rgb = invert_rgb(ctx_xy_to_rgb(ctx, xy));
+
+        // Trigger callbacks
+        this.container.trigger('change', [rgb]);
+
+        canvas_draw_gradient_square(ctx, rgb);
+
+        // Draw the circle
+        canvas_draw_filled_circle(ctx, 7, pos[0], pos[1], "#" + rgb_to_hex(rgb));
+        canvas_draw_circle(ctx, 7.5, pos[0], pos[1], "#000000");
+        canvas_draw_circle(ctx, 6, pos[0], pos[1], "#ffffff");
     },
-}
 
+    // Event handlers
 
-function render_colorpicker(spectrumbar, pickersquare, callback) {
-    var e,s,loc=[0,0],col=0,os;
+    _spectrum_select_event: function(event) {
+        event.stopPropagation();
 
-    // Generate the spectrum bar.
-    var ctxb = spectrumbar[0].getContext("2d");
-    var w=spectrumbar.width(), h=spectrumbar.height();
+        var ctx = this.spectrum_canvas;
+        var w = ctx.canvas.width, h = ctx.canvas.height;
 
-    drawSpectrumBar(ctxb, col);
+        var offset = this.spectrum.offset();
+        var xy = clip(event.pageX-offset.left, event.pageY-offset.top, w, h);
 
-    // Generate the picker square.
-    var ctx = pickersquare[0].getContext("2d");
+        this.spectrum_pos = (xy[0])/w;
+        this.draw();
+    },
+    _picker_select_event: function(event) {
+        event.stopPropagation();
 
-    var drawPickerSquare = function(coeff) {
-        var xy=[parseInt(coeff*(ctxb.canvas.width-1)), 0];
-        var rgb=invert_rgb(ctx_xy_to_rgb(ctxb, xy));
-        generatePickerSquare(ctx,rgb);
-    }
+        var ctx = this.picker_canvas;
+        var offset = this.picker.offset();
 
-    var drawPickerCircle = function(ctx, loc) {
-        var rgb = ctx_xy_to_rgb(ctx, loc);
-        callback(rgb);
-
-        fillFocusCircle(ctx, 7, loc[0], loc[1], "#" + rgb_to_hex(rgb));
-        drawFocusCircle(ctx, 7.5, loc[0], loc[1], "#000000");
-        drawFocusCircle(ctx, 6, loc[0], loc[1], "#ffffff");
-    };
-
-    var redrawPicker = function(ctx,loc,col) {
-        drawPickerSquare(col);
-        drawPickerCircle(ctx,loc);
-    };
-
-    var cfun = function(ev) {
-        ev.stopPropagation();
-        os = $(pickersquare).offset();
-        loc = clip(ev.pageX-os.left,ev.pageY-os.top,ctx.canvas.width,ctx.canvas.height);
-        drawPickerSquare(col);
-        drawPickerCircle(ctx,loc);
-    };
-
-    var calcSpectrumOffset = function(ev) {
-        ev.stopPropagation();
-        var w=ctxb.canvas.width, h=ctxb.canvas.height;
-        os=$(spectrumbar).offset();
-        var xy=clip(ev.pageX-os.left,ev.pageY-os.top,w,h);
-        col=(xy[0])/ctxb.canvas.width;
-        drawSpectrumBar(ctxb,col);
-        redrawPicker(ctx,loc,col);
-    };
-
-    redrawPicker(ctx,loc,col);
-
-    var sqDrag=pDrag=false;
-
-    $(pickersquare).click(cfun);
-    $(pickersquare).mousedown(function(e) {
-        sqDrag = true;
-    });
-    $(spectrumbar).click(calcSpectrumOffset);
-    $(spectrumbar).mousedown(function(e) {
-        pDrag = true;
-    });
-    $(document).mousemove(function(e) {
-        if (sqDrag) {cfun(e);}
-        if (pDrag) {calcSpectrumOffset(e);}
-    });
-    $(document).mouseup(function(e) {
-        sqDrag = false;
-        pDrag = false;
-    });
-
-    return function(rgb) {
-        var hsv=rgb_to_hsv(rgb);
-        col = (hsv[0]/0xff);
-        loc = [(hsv[2]/0xff)*ctx.canvas.width, (hsv[1]/0xff)*ctx.canvas.height];
-        drawSpectrumBar(ctxb,col);
-        drawPickerSquare(col);
-        drawPickerCircle(ctx,loc);
+        this.picker_poffset = clip(event.pageX-offset.left, event.pageY-offset.top, ctx.canvas.width, ctx.canvas.height);
+        this.draw();
     }
 }
