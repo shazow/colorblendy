@@ -134,6 +134,51 @@ $(document).ready(function() {
 });
 
 
+function ColorPicker(target) {
+
+    this.picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
+    this.spectrum = $('<canvas class="spectrum" width="208px" height="25px"></canvas>');
+
+    var  = spectrumbar[0].getContext("2d");
+
+    var box = $('<div class="color-picker"></div').append(picker).append(spectrum);
+
+    $(target).after(box);
+    var controller = render_colorpicker(spectrum, picker, callback);
+    controller(original_rgb);
+
+    var focusfn = function(e) {
+        e.stopPropagation();
+        $(target).select();
+        if(active_picker) $(active_picker).hide();
+        active_picker = $(box).show();
+
+        console.log(preview);
+    };
+    $(target).click(focusfn).focus(focusfn).keydown(function(e) {
+        if(e.which == 13) {
+            $(active_picker).hide();
+            active_picker = false;
+        }
+    });
+    return controller;
+}
+ColorPicker.prototype = {
+    set_color: function(rgb) {
+
+    },
+    get_color: function() {
+
+    },
+    _draw_spectrum: function() {
+
+    },
+    _draw_picker: function() {
+
+    },
+}
+
+
 function render_colorpicker(spectrumbar, pickersquare, callback) {
     var e,s,loc=[0,0],col=0,os;
 
