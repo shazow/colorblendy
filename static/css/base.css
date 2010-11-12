@@ -36,7 +36,7 @@ canvas {
     padding-top: 20px;
     width: 208px;
     margin: 0 auto;
-    display: none;
+    //display: none;
 }
 .color-picker .spectrum {
     margin-top: 5px;

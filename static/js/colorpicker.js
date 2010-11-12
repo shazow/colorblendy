@@ -17,21 +17,21 @@ var canvas_draw_gradient_square = function(ctx, rgb) {
     var w=ctx.canvas.width, h=ctx.canvas.height;
 
     var gradients = [
-        ["#ffffff","#ffffff"],
+        ["#ffffff", "#ffffff"],
         [rgb_a_to_css(rgb, 0),rgb_a_to_css(rgb, 0xff)],
-        [rgb_a_to_css([0,0,0], 1),rgb_a_to_css([0,0,0], 0)]
+        [rgb_a_to_css([0,0,0], 1), rgb_a_to_css([0,0,0], 0)]
     ];
     var locs = [
         [0,0,w,0],
         [0,0,0,h],
         [0,0,w,0]
     ];
-    for (i=0; i<3; i++) {
-        var gradient = ctx.createLinearGradient(locs[i][0],locs[i][1],locs[i][2],locs[i][3]);
-        gradient.addColorStop(0,gradients[i][0]);
-        gradient.addColorStop(1,gradients[i][1]);
+    for(var i=0; i<3; i++) {
+        var gradient = ctx.createLinearGradient(locs[i][0], locs[i][1], locs[i][2], locs[i][3]);
+        gradient.addColorStop(0, gradients[i][0]);
+        gradient.addColorStop(1, gradients[i][1]);
         ctx.fillStyle = gradient;
-        ctx.fillRect(0,0,w,h);
+        ctx.fillRect(0, 0, w, h);
     }
 }
 
@@ -68,6 +68,8 @@ function clip(x, y, w, h) {
 /***/
 
 function ColorPicker(target) {
+    this.target = target;
+
     this.picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
     this.picker_canvas = this.picker[0].getContext("2d");
     this.picker_pos = [0, 0];
@@ -84,31 +86,32 @@ function ColorPicker(target) {
 
     // Bind events
 
-    var sqDrag = pDrag = false;
+    var self = this;
+    var drag_picker = false, drag_spectrum = false;
 
     // -> Click
     this.picker.click(
-        function(e) { return this._picker_select_event(e); }
+        function(e) { return self._picker_select_event(e); }
     ).mousedown(
-        function(e) { sqDrag = true; }
+        function(e) { drag_picker = true; }
     );
 
     this.spectrum.click(
-        function(e) { return this._spectrum_select_event(e); }
+        function(e) { return self._spectrum_select_event(e); }
     ).mousedown(
-        function(e) { pDrag = true; }
+        function(e) { drag_spectrum = true; }
     );
 
     // -> Drag
     $(document).mousemove(
         function(e) {
-            if (sqDrag) return this._picker_select_event(e);
-            if (pDrag) return this._spectrum_select_event(e);
+            if (drag_picker) return self._picker_select_event(e);
+            if (drag_spectrum) return self._spectrum_select_event(e);
         }
     ).mouseup(
         function(e) {
-            sqDrag = false;
-            pDrag = false;
+            drag_picker = false;
+            drag_spectrum = false;
         }
     );
 }
@@ -169,22 +172,27 @@ ColorPicker.prototype = {
 
     },
     _draw_picker: function() {
-        var ctx = this.picker_canvas;
-        var pos = this.selected_pos;
+        // Draw 2d picker square gradient
 
-        // Draw the square
-        var xy = [parseInt(this.spectrum_pos*(ctx.canvas.width-1)), 0];
-        var rgb = invert_rgb(ctx_xy_to_rgb(ctx, xy));
+        var ctx_picker = this.picker_canvas;
+        var ctx_spectrum = this.spectrum_canvas;
+
+        var xy = [parseInt(this.spectrum_pos*(ctx_spectrum.canvas.width-1)), 0];
+
+        canvas_draw_gradient_square(ctx_picker, invert_rgb(ctx_xy_to_rgb(ctx_spectrum, xy)));
+
+        // Pick color out of the gradient square
+
+        var pos = this.picker_pos;
+        var rgb = ctx_xy_to_rgb(ctx_picker, pos);
 
         // Trigger callbacks
         this.container.trigger('change', [rgb]);
 
-        canvas_draw_gradient_square(ctx, rgb);
-
         // Draw the circle
-        canvas_draw_filled_circle(ctx, 7, pos[0], pos[1], "#" + rgb_to_hex(rgb));
-        canvas_draw_circle(ctx, 7.5, pos[0], pos[1], "#000000");
-        canvas_draw_circle(ctx, 6, pos[0], pos[1], "#ffffff");
+        canvas_draw_filled_circle(ctx_picker, 7, pos[0], pos[1], "#" + rgb_to_hex(rgb));
+        canvas_draw_circle(ctx_picker, 7.5, pos[0], pos[1], "#000000");
+        canvas_draw_circle(ctx_picker, 6, pos[0], pos[1], "#ffffff");
     },
 
     // Event handlers
@@ -207,7 +215,7 @@ ColorPicker.prototype = {
         var ctx = this.picker_canvas;
         var offset = this.picker.offset();
 
-        this.picker_poffset = clip(event.pageX-offset.left, event.pageY-offset.top, ctx.canvas.width, ctx.canvas.height);
+        this.picker_pos = clip(event.pageX-offset.left, event.pageY-offset.top, ctx.canvas.width, ctx.canvas.height);
         this.draw();
     }
 }
