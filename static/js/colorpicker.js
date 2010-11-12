@@ -1,5 +1,5 @@
-// Original author: John Zila
-// Modified by: Andrey Petrov
+// ColorPicker by Andrey Petrov
+// Based on canvas-based rendering from John Zila
 
 function ctx_xy_to_rgb(ctx, xy) {
     var img=ctx.getImageData(xy[0],xy[1],1,1);
@@ -69,6 +69,7 @@ function clip(x, y, w, h) {
 
 function ColorPicker(target) {
     this.target = target;
+    this.rgb = [0, 0, 0];
 
     this.picker = $('<canvas class="picker" width="208px" height="208px"></canvas>');
     this.picker_canvas = this.picker[0].getContext("2d");
@@ -93,20 +94,20 @@ function ColorPicker(target) {
     this.picker.click(
         function(e) { return self._picker_select_event(e); }
     ).mousedown(
-        function(e) { drag_picker = true; }
+        function(e) { drag_picker = self; }
     );
 
     this.spectrum.click(
         function(e) { return self._spectrum_select_event(e); }
     ).mousedown(
-        function(e) { drag_spectrum = true; }
+        function(e) { drag_spectrum = self; }
     );
 
     // -> Drag
     $(document).mousemove(
         function(e) {
-            if (drag_picker) return self._picker_select_event(e);
-            if (drag_spectrum) return self._spectrum_select_event(e);
+            if (drag_picker == self) return self._picker_select_event(e);
+            if (drag_spectrum == self) return self._spectrum_select_event(e);
         }
     ).mouseup(
         function(e) {
@@ -120,6 +121,9 @@ ColorPicker.prototype = {
         this.container.bind(name, fn);
     },
     set_color: function(rgb) {
+        // Set position of the picker based on the color (approximate), and store it precisely
+        this.rgb = rgb;
+
         var hsv = rgb_to_hsv(rgb);
 
         this.spectrum_pos = (hsv[0]/0xff);
@@ -128,7 +132,13 @@ ColorPicker.prototype = {
         this.draw();
     },
     get_color: function() {
-        return ctx_xy_to_rgb(this.picker_canvas, this.picker_pos);
+        // Get color based on the position of the picker (approximate)
+        var hsv = [
+            0xff * this.spectrum_pos,
+            0xff * this.picker_pos[1] / (this.picker_canvas.canvas.height - 1),
+            0xff * this.picker_pos[0] / (this.picker_canvas.canvas.width - 1)
+        ];
+        return hsv_to_rgb(hsv);
     },
     draw: function() {
         this._draw_spectrum();
@@ -163,8 +173,8 @@ ColorPicker.prototype = {
 
         // Draw the cursor line.
         ctx.beginPath();
-        ctx.moveTo(xw,0);
-        ctx.lineTo(xw,h);
+        ctx.moveTo(xw, 0);
+        ctx.lineTo(xw, h);
         ctx.closePath();
         ctx.strokeStyle = rgb_to_css(invert_rgb(ctx_xy_to_rgb(ctx, [xw, 0])));
         ctx.lineWidth = 4;
@@ -184,13 +194,12 @@ ColorPicker.prototype = {
         // Pick color out of the gradient square
 
         var pos = this.picker_pos;
-        var rgb = ctx_xy_to_rgb(ctx_picker, pos);
 
         // Trigger callbacks
-        this.container.trigger('change', [rgb]);
+        this.container.trigger('change', [this.rgb]);
 
         // Draw the circle
-        canvas_draw_filled_circle(ctx_picker, 7, pos[0], pos[1], "#" + rgb_to_hex(rgb));
+        canvas_draw_filled_circle(ctx_picker, 7, pos[0], pos[1], "#" + rgb_to_hex(this.rgb));
         canvas_draw_circle(ctx_picker, 7.5, pos[0], pos[1], "#000000");
         canvas_draw_circle(ctx_picker, 6, pos[0], pos[1], "#ffffff");
     },
@@ -207,6 +216,8 @@ ColorPicker.prototype = {
         var xy = clip(event.pageX-offset.left, event.pageY-offset.top, w, h);
 
         this.spectrum_pos = (xy[0])/w;
+
+        this.rgb = this.get_color();
         this.draw();
     },
     _picker_select_event: function(event) {
@@ -216,6 +227,8 @@ ColorPicker.prototype = {
         var offset = this.picker.offset();
 
         this.picker_pos = clip(event.pageX-offset.left, event.pageY-offset.top, ctx.canvas.width, ctx.canvas.height);
+
+        this.rgb = this.get_color();
         this.draw();
     }
 }
