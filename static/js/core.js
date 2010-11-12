@@ -114,6 +114,8 @@ function render_blend() {
     }
 }
 
+var reset_pickers, p1, p2;
+
 $(document).ready(function() {
     var active = $("#blend-mode li.active");
     $("#blend-mode li").click(function(e) {
@@ -131,8 +133,8 @@ $(document).ready(function() {
 
     $("body").disableTextSelect();
 
-    var p1 = new ColorPicker($("#color-bottom"));
-    var p2 = new ColorPicker($("#color-top"));
+    p1 = new ColorPicker($("#color-bottom"));
+    p2 = new ColorPicker($("#color-top"));
 
     var p1_preview = $("#color-bottom-preview");
     p1.add_listener('change', function(e, rgb) {
@@ -151,4 +153,13 @@ $(document).ready(function() {
         p2.target.val("#" + rgb_to_hex(rgb));
         render_blend();
     });
+
+    reset_pickers = function() {
+        var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));
+        var c2 = css_to_rgb($("#color-top-preview").css('background-color'));
+        p1.set_color(c1);
+        p2.set_color(c2);
+    }
+
+    reset_pickers();
 });

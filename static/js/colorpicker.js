@@ -123,12 +123,12 @@ ColorPicker.prototype = {
         var hsv = rgb_to_hsv(rgb);
 
         this.spectrum_pos = (hsv[0]/0xff);
-        this.picker_pos = [(hsv[2]/0xff)*ctx.canvas.width, (hsv[1]/0xff)*this.spectrum_canvas.canvas.height];
+        this.picker_pos = [(hsv[2]/0xff)*this.picker_canvas.canvas.width - 1, (hsv[1]/0xff)*this.picker_canvas.canvas.height - 1];
 
         this.draw();
     },
     get_color: function() {
-        return ctx_xy_to_rgb(this.spectrum_canvas, this.selected_pos);
+        return ctx_xy_to_rgb(this.picker_canvas, this.picker_pos);
     },
     draw: function() {
         this._draw_spectrum();
