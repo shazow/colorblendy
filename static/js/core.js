@@ -40,7 +40,9 @@ function rgb_a_to_css(rgb, a) {
 }
 
 function rgb_to_hsv(rgb){
-    /* [50,50,100] -> [170, 127.5, 100] */
+    /* [50,50,100] -> [170, 127.5, 100]
+     * (Based on Python's colorsys.rgb_to_hsv)
+     */
     var r = rgb[0]/255, g = rgb[1]/255, b = rgb[2]/255;
     var max = Math.max(r,g,b), min = Math.min(r,g,b);
     if(max==min) return [0,0,max*255];
@@ -59,6 +61,31 @@ function rgb_to_hsv(rgb){
 
     return [h*255,s*255,v*255];
 }
+
+function hsv_to_rgb(hsv) {
+    /* [170, 127.5, 100] -> [50,50,100]
+     * (Based on Python's colorsys.hsv_to_rgb)
+     */
+    var h = hsv[0], s = hsv[1], v = hsv[2];
+
+    if(s==0) return [v,v,v];
+
+    var i = Math.floor((h * 6) / 255);
+    var f = ((h * 6) / 255) - i;
+
+    var p = v * (1 - s/255);
+    var q = v * (1 - s*f/255);
+    var t = v * (1 - s*(1 - f)/255);
+
+    var i = i % 6;
+    if(i==0) return [v, t, p];
+    if(i==1) return [q, v, p];
+    if(i==2) return [p, v, t];
+    if(i==3) return [p, q, v];
+    if(i==4) return [t, p, v];
+    if(i==5) return [v, p, q];
+}
+
 
 function invert_rgb(rgb) {
     return [0xff - rgb[0], 0xff - rgb[1], 0xff - rgb[2]];
