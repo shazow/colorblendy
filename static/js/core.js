@@ -1,3 +1,5 @@
+var reset_pickers, p1, p2;
+
 function render_blend() {
     var blend_mode = $("#blend-mode li.active").text().toLowerCase();
     try {
@@ -14,8 +16,6 @@ function render_blend() {
         alert("Unsupported color format.");
     }
 }
-
-var reset_pickers, p1, p2;
 
 $(document).ready(function() {
     var active = $("#blend-mode li.active");
@@ -35,35 +35,40 @@ $(document).ready(function() {
     p1 = new ColorPicker($("#color-bottom"));
     p2 = new ColorPicker($("#color-top"));
 
-    // TODO: Make this sexier:
-
-    var p1_preview = $("#color-bottom-preview");
-    p1.add_listener('change', function(e, rgb) {
-        e.stopPropagation();
-
-        p1_preview.css('background-color', rgb_to_css(rgb));
-        p1.target.val("#" + rgb_to_hex(rgb));
-        render_blend();
-    });
-
-    var p2_preview = $("#color-top-preview");
-    p2.add_listener('change', function(e, rgb) {
-        e.stopPropagation();
-
-        p2_preview.css('background-color', rgb_to_css(rgb));
-        p2.target.val("#" + rgb_to_hex(rgb));
-        render_blend();
-    });
+    // Initialize picker interaction
+    p1.preview = $("#color-bottom-preview");
+    p2.preview = $("#color-top-preview");
 
     var body = $("body");
     function disable_text_select() { body.disableTextSelect(); }
     function enable_text_select() { body.enableTextSelect(); }
 
-    p1.add_listener('dragstart', disable_text_select);
-    p1.add_listener('dragstop', enable_text_select);
+    var active_picker = false;
 
-    p2.add_listener('dragstart', disable_text_select);
-    p2.add_listener('dragstop', enable_text_select);
+    $.map([p1, p2], function(o, i) {
+        o.target.focus(function() {
+            if(active_picker && active_picker != o.container) {
+                active_picker.hide();
+                active_picker = false;
+            }
+            active_picker = o.container.show();
+        }).blur(function() {
+            if(!active_picker) return;
+            active_picker.hide();
+            active_picker = false;
+        });
+
+        o.add_listener('change', function(e, rgb) {
+            e.stopPropagation();
+
+            o.preview.css('background-color', rgb_to_css(rgb));
+            o.target.val("#" + rgb_to_hex(rgb));
+            render_blend();
+        });
+
+        o.add_listener('dragstart', disable_text_select);
+        o.add_listener('dragstop', enable_text_select);
+    });
 
     reset_pickers = function() {
         var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));

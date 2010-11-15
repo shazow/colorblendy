@@ -9,13 +9,14 @@ body {
 }
 
 h1 {
-    font-weight:normal;
+    font-weight:bold;
     color:#fff;
     font-size:0.9em;
     color: #444b52;
     line-height:50px; height:50px; margin:0; float:right; width:50%;
     text-transform:uppercase;
     letter-spacing:0.2em;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.6);
 }
 
 input {
@@ -36,7 +37,7 @@ canvas {
     padding-top: 20px;
     width: 208px;
     margin: 0 auto;
-    //display: none;
+    display: none;
 }
 .color-picker .spectrum {
     margin-top: 5px;
@@ -82,6 +83,7 @@ canvas {
     letter-spacing:0.1em;
     cursor:pointer;
     font-size:0.9em;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
 }
 
 #color-blended-preview ul li.active, #color-blended-preview ul li:hover {
