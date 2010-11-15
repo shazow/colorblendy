@@ -69,7 +69,7 @@ $(document).ready(function() {
     var active_picker = false;
 
     $.map([p1, p2], function(o, i) {
-        o.target.focus(function() {
+        o.target.focus(function(e) {
             if(active_picker && active_picker != o) {
                 active_picker.container.hide();
                 active_picker = false;
@@ -77,11 +77,13 @@ $(document).ready(function() {
             }
             o.container.show();
             active_picker = o;
-        }).blur(function() {
-            if(!active_picker) return;
+        }).blur(function(e) {
+            if(!active_picker || changing_picker) return;
             active_picker.container.hide();
             active_picker = false;
             changed_picker = false;
+        }).click(function(e) {
+            e.stopPropagation();
         });
 
         o.add_listener('change', function(e, rgb) {
@@ -94,6 +96,13 @@ $(document).ready(function() {
 
         o.add_listener('dragstart', function(e) { body.disableTextSelect(); changing_picker = true; changed_picker = true; });
         o.add_listener('dragstop', function (e) { body.enableTextSelect(); changing_picker = false; });
+    });
+
+    $(document).click(function(e) {
+        if(!active_picker || changing_picker) return;
+        active_picker.container.hide();
+        active_picker = false;
+        changed_picker = false;
     });
 
     reset_pickers = function() {
