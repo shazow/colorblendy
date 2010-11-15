@@ -39,16 +39,16 @@ I know, awesome, right? You should retweet it.
         <div id="color-blended-preview" class="preview">
             <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
             <ul id="blend-mode">
-                <li class="active">Multiply</li>
-                <li>Screen</li>
-                <li>Overlay</li>
-                <li>Dodge</li>
-                <li>Burn</li>
+                <li id="mode-multiply" class="active">Multiply</li>
+                <li id="mode-screen" >Screen</li>
+                <li id="mode-overlay">Overlay</li>
+                <li id="mode-dodge">Dodge</li>
+                <li id="mode-burn">Burn</li>
             </ul>
         </div>
     </div>
     <div id="color-top-preview" class="preview">
-        <p><input type="text" id="color-top" value="#333333" onchange="render_blend(); reset_pickerts();" tabindex="2" /></p>
+        <p><input type="text" id="color-top" value="#333333" onchange="render_blend(); reset_pickers();" tabindex="2" /></p>
     </div>
 </div>
 
@@ -61,6 +61,7 @@ I know, awesome, right? You should retweet it.
 
 <script src="http://github.com/shazow/colorlib/raw/normalized/colorlib.js"></script>
 <script src="js/jquery.disable.text.select.js"></script>
+<script src="js/jquery.ba-hashchange.min.js"></script>
 <script src="js/core.js"></script>
 <script src="js/colorpicker.js"></script>
 
