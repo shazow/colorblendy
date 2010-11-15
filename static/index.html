@@ -19,34 +19,36 @@ I know, awesome, right? You should retweet it.
 <head>
 
 <meta charset="utf-8" />
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" /> <meta
-name="description" content="Ever fire up Photoshop just to multiply a couple of
-colors? No more." /> 
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="description" content="Ever fire up Photoshop just to multiply a couple of colors? No more." />
 
-<title>ColorBlendy - Blend colors with different modes like multiply, overlay,
-    dodge.</title>
+<title>ColorBlendy - Blend colors with different modes like multiply, overlay, dodge.</title>
 
-<link rel="icon" type="image/png" href="icon.png" /> <link href="css/base.css"
-rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/png" href="icon.png" /> <link href="css/base.css" rel="stylesheet" type="text/css"/>
 
 </head> <body>
 
-<form onsubmit="render_blend(); $('#color-blended').select(); reset_pickers();
-    return false;" action="#">
+<form onsubmit="render_blend(); $('#color-blended').select(); reset_pickers(); return false;" action="#">
 
 <div style="height: 550px; width: 100%; text-align: center;">
-    <div id="color-bottom-preview" class="preview"> <h1> ColorBlendy </h1> <div
-            style="float: left; width: 50%; margin: 50px 0 0 0;"> <p><input
-                type="text" id="color-bottom" value="#aabbcc"
-                onchange="render_blend(); reset_pickers();" tabindex="1" /></p>
+    <div id="color-bottom-preview" class="preview">
+        <h1> ColorBlendy </h1>
+        <div style="float: left; width: 50%; margin: 50px 0 0 0;">
+            <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend(); reset_pickers();" tabindex="1" /></p>
         </div>
-        <div id="color-blended-preview" class="preview"> <p><input type="text"
-                id="color-blended" value="#222529" readonly="readonly" /></p>
-            <ul id="blend-mode"> <li class="active">Multiply</li>
-                <li>Screen</li> <li>Overlay</li> <li>Dodge</li> <li>Burn</li>
-            </ul> </div> </div> <div id="color-top-preview" class="preview">
-            <p><input type="text" id="color-top" value="#333333"
-                onchange="render_blend(); reset_pickerts();" tabindex="2" /></p>
+        <div id="color-blended-preview" class="preview">
+            <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
+            <ul id="blend-mode">
+                <li class="active">Multiply</li>
+                <li>Screen</li>
+                <li>Overlay</li>
+                <li>Dodge</li>
+                <li>Burn</li>
+            </ul>
+        </div>
+    </div>
+    <div id="color-top-preview" class="preview">
+        <p><input type="text" id="color-top" value="#333333" onchange="render_blend(); reset_pickerts();" tabindex="2" /></p>
     </div>
 </div>
 
@@ -57,7 +59,7 @@ rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
 <script>!window.jQuery && document.write(unescape('%3Cscript src="js/jquery-1.4.2.js"%3E%3C/script%3E'))</script>
 
-<script src="http://github.com/shazow/colorlib/raw/master/colorlib.js"></script>
+<script src="http://github.com/shazow/colorlib/raw/normalized/colorlib.js"></script>
 <script src="js/jquery.disable.text.select.js"></script>
 <script src="js/core.js"></script>
 <script src="js/colorpicker.js"></script>

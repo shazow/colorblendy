@@ -32,10 +32,10 @@ $(document).ready(function() {
         }
     });
 
-    $("body").disableTextSelect();
-
     p1 = new ColorPicker($("#color-bottom"));
     p2 = new ColorPicker($("#color-top"));
+
+    // TODO: Make this sexier:
 
     var p1_preview = $("#color-bottom-preview");
     p1.add_listener('change', function(e, rgb) {
@@ -54,6 +54,16 @@ $(document).ready(function() {
         p2.target.val("#" + rgb_to_hex(rgb));
         render_blend();
     });
+
+    var body = $("body");
+    function disable_text_select() { body.disableTextSelect(); }
+    function enable_text_select() { body.enableTextSelect(); }
+
+    p1.add_listener('dragstart', disable_text_select);
+    p1.add_listener('dragstop', enable_text_select);
+
+    p2.add_listener('dragstart', disable_text_select);
+    p2.add_listener('dragstop', enable_text_select);
 
     reset_pickers = function() {
         var c1 = css_to_rgb($("#color-bottom-preview").css('background-color'));

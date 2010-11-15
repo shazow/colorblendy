@@ -94,23 +94,30 @@ function ColorPicker(target) {
     this.picker.click(
         function(e) { return self._picker_select_event(e); }
     ).mousedown(
-        function(e) { drag_picker = self; }
+        function(e) {
+            drag_picker = self;
+            self.container.trigger('dragstart');
+        }
     );
 
     this.spectrum.click(
         function(e) { return self._spectrum_select_event(e); }
     ).mousedown(
-        function(e) { drag_spectrum = self; }
+        function(e) {
+            drag_spectrum = self;
+            self.container.trigger('dragstart');
+        }
     );
 
     // -> Drag
     $(document).mousemove(
         function(e) {
-            if (drag_picker == self) return self._picker_select_event(e);
-            if (drag_spectrum == self) return self._spectrum_select_event(e);
+            if(drag_picker == self) return self._picker_select_event(e);
+            if(drag_spectrum == self) return self._spectrum_select_event(e);
         }
     ).mouseup(
         function(e) {
+            if(drag_picker || drag_spectrum) self.container.trigger('dragstop');
             drag_picker = false;
             drag_spectrum = false;
         }
@@ -126,17 +133,17 @@ ColorPicker.prototype = {
 
         var hsv = rgb_to_hsv(rgb);
 
-        this.spectrum_pos = (hsv[0]/0xff);
-        this.picker_pos = [(hsv[2]/0xff)*this.picker_canvas.canvas.width - 1, (hsv[1]/0xff)*this.picker_canvas.canvas.height - 1];
+        this.spectrum_pos = hsv[0];
+        this.picker_pos = [hsv[2]*this.picker_canvas.canvas.width - 1, hsv[1]*this.picker_canvas.canvas.height - 1];
 
         this.draw();
     },
     get_color: function() {
         // Get color based on the position of the picker (approximate)
         var hsv = [
-            0xff * this.spectrum_pos,
-            0xff * this.picker_pos[1] / (this.picker_canvas.canvas.height - 1),
-            0xff * this.picker_pos[0] / (this.picker_canvas.canvas.width - 1)
+            this.spectrum_pos,
+            this.picker_pos[1] / (this.picker_canvas.canvas.height - 1),
+            this.picker_pos[0] / (this.picker_canvas.canvas.width - 1)
         ];
         return hsv_to_rgb(hsv);
     },
