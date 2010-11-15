@@ -1,5 +1,4 @@
-var reset_pickers, p1, p2, blend_mode, changing_picker = true, changed_picker = true;
-
+var reset_pickers, p1, p2, blend_mode, changing_picker = true, changed_picker = true, current_url = false;
 
 function get_blend_mode() {
     if(!blend_mode) return 'multiply';
@@ -7,10 +6,14 @@ function get_blend_mode() {
 }
 function write_url() {
     location.hash = "#!/" + get_blend_mode() + '/' + rgb_to_hex(p1.rgb) + '/' + rgb_to_hex(p2.rgb);
+    current_url = location.hash;
 }
 function read_url() {
     var hash = location.hash;
     if(!hash || hash.substring(0,3) != '#!/') return;
+    if(hash == current_url) return;
+    current_url = hash;
+
     var parts = location.hash.substring(3).split('/');
 
     set_mode(parts[0]);
@@ -99,7 +102,9 @@ $(document).ready(function() {
     }
 
     read_url();
+    setInterval(read_url, 200);
     reset_pickers();
+
     changing_picker = false;
     changed_picker = false;
 
