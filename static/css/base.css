@@ -14,11 +14,10 @@ h1 {
     line-height:50px; height:50px; margin:0; float:right; width:50%;
 }
 h1 a {
-    color:#fff;
     color: #444b52;
     text-transform:uppercase;
     letter-spacing:0.2em;
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.6);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     text-decoration: none;
 }
 

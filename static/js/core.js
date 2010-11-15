@@ -34,6 +34,8 @@ function render_blend() {
 
         $("#color-blended-preview").css('background-color', rgb_to_css(blended));
         $("#color-blended").val("#" + rgb_to_hex(blended));
+
+        $("h1:first a").css('color', rgb_to_css(invert_rgb(c1)));
     } catch(err) {
         alert("Unsupported color format.");
         throw err;
