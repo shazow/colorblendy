@@ -4,12 +4,12 @@
   "version": "1",
   "app": {
     "launch": {
-      "local_path": "static/index.html"
+      "local_path": "index.html"
     }
   },
   "icons": {
-    "16": "static/icon_16.png",
-    "128": "static/icon_128.png"
+    "16": "icon_16.png",
+    "128": "icon_128.png"
   },
   "permissions": [
   ]
