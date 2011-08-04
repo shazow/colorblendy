@@ -20,6 +20,7 @@ I know, awesome, right? You should retweet it.
 
 <meta charset="utf-8" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="viewport" content="width=device-width,initial-scale=0.5,maximum-scale=0.5">
 <meta name="description" content="Ever fire up Photoshop just to multiply a couple of colors? No more." />
 
 <title>ColorBlendy - Blend colors with different modes like multiply, overlay, dodge.</title>
@@ -33,12 +34,12 @@ I know, awesome, right? You should retweet it.
 <form action="#">
 
     <div id="color-bottom-preview" class="preview">
-        <h1><a href="./">ColorBlendy</a></h1>
+        <h1><a href="./" tabindex="-1">ColorBlendy</a></h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
             <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
         </div>
         <div id="color-blended-preview" class="preview">
-            <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
+            <p><input type="text" id="color-blended" value="#222529" tabindex="3" readonly="readonly" /></p>
             <ul id="blend-mode">
                 <li id="mode-multiply" class="active">Multiply</li>
                 <li id="mode-screen" >Screen</li>

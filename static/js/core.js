@@ -84,6 +84,7 @@ $(document).ready(function() {
             }
             o.container.show();
             active_picker = o;
+            $(this).select();
         }).blur(function(e) {
             if(!active_picker || changing_picker) return;
             active_picker.container.hide();
@@ -134,6 +135,11 @@ $(document).ready(function() {
             $(blend_mode).prev().click();
         } else if(e.which == 40 || e.which == 74) { // Up
             $(blend_mode).next().click();
+        } else if (e.which == 9) { // Tab
+            if($(e.target).attr("tabindex") == "3") {
+                e.preventDefault();
+                $("input[tabindex=1]").focus();
+            }
         }
     });
 
