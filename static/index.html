@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<!--
+
+Protips:
+
+* You can use keyboard shortcuts to change blend modes (arrow keys or j/k).
+* Hitting <Enter> in a color input will select the blended color output
+  for convenient copying/pasting.
+* You can use any CSS-supported color input, such as:
+    * rgb(42,0,0)
+    * rgba(255,255,50,0.8)
+    * #eee
+    * blue
+
+I know, awesome, right? You should retweet it.
+
+-->
 <html lang="en">
 <head>
 
@@ -8,17 +24,18 @@
 
 <title>ColorBlendy - Blend colors with different modes like multiply, overlay, dodge.</title>
 
-<link rel="icon" type="image/png" href="icon.png" /> <link href="css/base.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/png" href="icon.png" />
+<link href="css/base.css" rel="stylesheet" type="text/css"/>
 
 </head> <body>
 
-<form onsubmit="render_blend(); $('#color-blended').select(); reset_pickers(); return false;" action="#">
+<form action="#">
 
 <div style="height: 550px; width: 100%; text-align: center;">
     <div id="color-bottom-preview" class="preview">
         <h1><a href="./">ColorBlendy</a></h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
-            <p><input type="text" id="color-bottom" value="#aabbcc" onchange="render_blend(); reset_pickers();" tabindex="1" spellcheck="false" /></p>
+            <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
         </div>
         <div id="color-blended-preview" class="preview">
             <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
@@ -32,17 +49,17 @@
         </div>
     </div>
     <div id="color-top-preview" class="preview">
-        <p><input type="text" id="color-top" value="#333333" onchange="render_blend(); reset_pickers();" tabindex="2" spellcheck="false" /></p>
+        <p><input type="text" id="color-top" value="#333333" tabindex="2" spellcheck="false" /></p>
     </div>
 </div>
 
 </form>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
-<script src="http://github.com/shazow/colorlib/raw/normalized/colorlib.js"></script>
 <script src="js/jquery.disable.text.select.js"></script>
-<script src="js/core.js"></script>
+<script src="js/colorlib.js"></script>
 <script src="js/colorpicker.js"></script>
+<script src="js/core.js"></script>
 
 </body>
 
