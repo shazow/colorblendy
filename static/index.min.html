@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="description" content="Ever fire up Photoshop just to multiply a couple of colors? No more." />
+
+<title>ColorBlendy - Blend colors with different modes like multiply, overlay, dodge.</title>
+
+<link rel="icon" type="image/png" href="icon.png" />
+<link href="all.min.css" rel="stylesheet" type="text/css"/>
+
+</head> <body>
+
+<form action="#">
+
+<div style="height: 550px; width: 100%; text-align: center;">
+    <div id="color-bottom-preview" class="preview">
+        <h1><a href="./">ColorBlendy</a></h1>
+        <div style="float: left; width: 50%; margin: 50px 0 0 0;">
+            <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
+        </div>
+        <div id="color-blended-preview" class="preview">
+            <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
+            <ul id="blend-mode">
+                <li id="mode-multiply" class="active">Multiply</li>
+                <li id="mode-screen" >Screen</li>
+                <li id="mode-overlay">Overlay</li>
+                <li id="mode-dodge">Dodge</li>
+                <li id="mode-burn">Burn</li>
+            </ul>
+        </div>
+    </div>
+    <div id="color-top-preview" class="preview">
+        <p><input type="text" id="color-top" value="#333333" tabindex="2" spellcheck="false" /></p>
+    </div>
+</div>
+
+</form>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
+<script src="all.min.js"></script>
+
+</body>
+
+</html>
