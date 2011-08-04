@@ -51,6 +51,13 @@ function set_mode(mode) {
 }
 
 $(document).ready(function() {
+    var r = $("form:first").submit(function() {
+        render_blend(); $('#color-blended').select(); reset_pickers(); return false;
+    });
+    $("input[readonly!=readonly]", r).change(function() {
+        render_blend(); reset_pickers();
+    });
+
     blend_mode = $("#blend-mode li.active");
 
     $("#blend-mode li").click(function(e) {
