@@ -52,7 +52,10 @@ function set_mode(mode) {
 
 $(document).ready(function() {
     var r = $("form:first").submit(function() {
-        render_blend(); $('#color-blended').select(); reset_pickers(); return false;
+        render_blend(); reset_pickers();
+        body.enableTextSelect();
+        $('#color-blended').select(); 
+        return false;
     });
     $("input[readonly!=readonly]", r).change(function() {
         render_blend(); reset_pickers();
@@ -84,8 +87,7 @@ $(document).ready(function() {
             }
             o.container.show();
             active_picker = o;
-            $(this).select();
-        }).blur(function(e) {
+        }).blur(function(e){
             if(!active_picker || changing_picker) return;
             active_picker.container.hide();
             active_picker = false;
@@ -102,7 +104,9 @@ $(document).ready(function() {
             render_blend();
         });
 
-        o.add_listener('dragstart', function(e) { body.disableTextSelect(); changing_picker = true; changed_picker = true; });
+        o.add_listener('dragstart', function(e) { 
+            console.log('dragstart');
+            body.disableTextSelect(); changing_picker = true; changed_picker = true; });
         o.add_listener('dragstop', function (e) { body.enableTextSelect(); changing_picker = false; });
     });
 
@@ -138,7 +142,7 @@ $(document).ready(function() {
         } else if (e.which == 9) { // Tab
             if($(e.target).attr("tabindex") == "3") {
                 e.preventDefault();
-                $("input[tabindex=1]").focus();
+                $("input[tabindex=1]").focus(); // Prevent escaping to the chrome
             }
         }
     });
