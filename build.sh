@@ -17,6 +17,7 @@ echo "Setting up build environment: $BUILD_PATH"
 rm -rf $BUILD_PATH
 mkdir -p $BUILD_PATH
 cp $WORKING_PATH/index.min.html $BUILD_PATH/index.html
+cp $WORKING_PATH/*.{png,ico} $BUILD_PATH/
 
 
 # JavaScript Closure stuff

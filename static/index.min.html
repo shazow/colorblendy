@@ -4,8 +4,8 @@
 Protips:
 
 * You can use keyboard shortcuts to change blend modes (arrow keys or j/k).
-* Hitting <Enter> in a color input will select the blended color output
-  for convenient copying/pasting.
+* Tabbing will cycle through the options, or <Enter> in a color input will
+  select the blended color output for convenient copying/pasting.
 * You can use any CSS-supported color input, such as:
     * rgb(42,0,0)
     * rgba(255,255,50,0.8)
@@ -13,6 +13,8 @@ Protips:
     * blue
 
 I know, awesome, right? You should retweet it.
+
+Concept and code by @shazow, design by @limedaring.
 
 -->
 <html lang="en">
@@ -31,15 +33,15 @@ I know, awesome, right? You should retweet it.
 </head>
 <body>
 
-<form action="#">
+<form>
 
     <div id="color-bottom-preview" class="preview">
-        <h1><a href="./">ColorBlendy</a></h1>
+        <h1><a href="./" tabindex="-1">ColorBlendy</a></h1>
         <div style="float: left; width: 50%; margin: 50px 0 0 0;">
             <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
         </div>
         <div id="color-blended-preview" class="preview">
-            <p><input type="text" id="color-blended" value="#222529" readonly="readonly" /></p>
+            <p><input type="text" id="color-blended" value="#222529" tabindex="3" readonly="readonly" /></p>
             <ul id="blend-mode">
                 <li id="mode-multiply" class="active">Multiply</li>
                 <li id="mode-screen" >Screen</li>
@@ -52,6 +54,8 @@ I know, awesome, right? You should retweet it.
     <div id="color-top-preview" class="preview">
         <p><input type="text" id="color-top" value="#333333" tabindex="2" spellcheck="false" /></p>
     </div>
+
+    <input type="submit" style="visibility: hidden;" />
 
 </form>
 
