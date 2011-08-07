@@ -115,6 +115,8 @@ ul#blend-mode li.active, ul#blend-mode li:hover {
     top: 0;
     right: 0;
     margin-top: 15px;
+
+    display: none; /* Until 10kapart gets their voting on. */
 }
 
 #footer {
@@ -129,4 +131,3 @@ ul#blend-mode li.active, ul#blend-mode li:hover {
     color: #666;
     text-decoration: none;
 }
-
