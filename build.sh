@@ -18,6 +18,7 @@ rm -rf $BUILD_PATH
 mkdir -p $BUILD_PATH
 cp $WORKING_PATH/index.min.html $BUILD_PATH/index.html
 cp $WORKING_PATH/*.{png,ico} $BUILD_PATH/
+cp -r $WORKING_PATH/images $BUILD_PATH/
 
 
 # JavaScript Closure stuff
