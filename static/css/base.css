@@ -33,16 +33,20 @@ input {
     outline:10px solid rgba(0,0,0,0.1);
     font-family:monospace;
 }
-form {
-    padding: 25px 0 25px 0; margin: 0;
-
+input[type=submit] {
+    visibility: hidden;
+}
+#container {
+    padding: 25px 0 40px 0; margin: 0;
     position: absolute;
     top: 0; bottom: 0;
-
     width: 100%;
     overflow: hidden;
+    min-width: 600px;
+}
+#container > form {
     display: block;
-
+    height: 100%;
     text-align: center;
 }
 .color-picker {
@@ -82,9 +86,10 @@ form {
 
 ul#blend-mode {
     height: 155px;
-    width:226px;
+    width: 60%;
+    min-width: 160px;
 
-    margin: auto auto;
+    margin: 20px auto 0 auto;
     background-color:rgba(255,255,255,0.1);
     list-style-type:none;
     padding:0;
@@ -111,3 +116,17 @@ ul#blend-mode li.active, ul#blend-mode li:hover {
     right: 0;
     margin-top: 15px;
 }
+
+#footer {
+    text-align: center;
+    font-size: 10px;
+    line-height: 40px;
+    height: 40px;
+    width: 100%;
+    color: #444;
+}
+#footer a {
+    color: #666;
+    text-decoration: none;
+}
+

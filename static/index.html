@@ -33,36 +33,40 @@ Concept and code by @shazow, design by @limedaring.
 </head>
 <body>
 
-<form>
+<div id="container">
 
-    <div id="color-bottom-preview" class="preview">
-        <h1><a href="./" tabindex="-1">ColorBlendy</a></h1>
-        <div style="float: left; width: 50%; margin: 50px 0 0 0;">
-            <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
+    <form>
+
+        <div id="color-bottom-preview" class="preview">
+            <h1><a href="./" tabindex="-1">ColorBlendy</a></h1>
+            <div style="float: left; width: 50%; margin: 50px 0 0 0;">
+                <p><input type="text" id="color-bottom" value="#aabbcc" tabindex="1" spellcheck="false" /></p>
+            </div>
+            <div id="color-blended-preview" class="preview">
+                <p><input type="text" id="color-blended" value="#222529" tabindex="3" readonly="readonly" /></p>
+                <ul id="blend-mode">
+                    <li id="mode-multiply" class="active">Multiply</li>
+                    <li id="mode-screen" >Screen</li>
+                    <li id="mode-overlay">Overlay</li>
+                    <li id="mode-dodge">Dodge</li>
+                    <li id="mode-burn">Burn</li>
+                </ul>
+            </div>
         </div>
-        <div id="color-blended-preview" class="preview">
-            <p><input type="text" id="color-blended" value="#222529" tabindex="3" readonly="readonly" /></p>
-            <ul id="blend-mode">
-                <li id="mode-multiply" class="active">Multiply</li>
-                <li id="mode-screen" >Screen</li>
-                <li id="mode-overlay">Overlay</li>
-                <li id="mode-dodge">Dodge</li>
-                <li id="mode-burn">Burn</li>
-            </ul>
+        <div id="color-top-preview" class="preview">
+            <p><input type="text" id="color-top" value="#333333" tabindex="2" spellcheck="false" /></p>
         </div>
-    </div>
-    <div id="color-top-preview" class="preview">
-        <p><input type="text" id="color-top" value="#333333" tabindex="2" spellcheck="false" /></p>
-    </div>
-    <input type="submit" />
+        <input type="submit" />
 
-</form>
+    </form>
 
-<div id="footer">A <a href="http://10k.aneventapart.com/Entry/175">10K Apart</a> project by <a href="http://twitter.com/shazow">shazow</a> and <a href="http://twitter.com/limedaring">limedaring</a>.</div>
+    <div id="footer">Crafted with love by <a href="http://twitter.com/shazow">shazow</a> and <a href="http://twitter.com/limedaring">limedaring</a>.</div>
 
-<a id="vote" href="http://10k.aneventapart.com/Entry/Details/504">
-    <img src="images/10k-banner.png" alt="Vote for ColorBlendy on 10K Apart" />
-</a>
+    <a id="vote" href="http://10k.aneventapart.com/Entry/Details/504">
+        <img src="images/10k-banner.png" alt="Vote for ColorBlendy on 10K Apart" />
+    </a>
+</div>
+
 
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
 <script src="js/jquery.disable.text.select.js"></script>
