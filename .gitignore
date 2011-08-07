@@ -1,4 +1,3 @@
-*~
-.*
 /build
-*.min.*
+/closure
+build.log
