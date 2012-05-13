@@ -2,6 +2,8 @@
   "name": "Colorblendy",
   "description": "Ever fire up Photoshop just to multiply a couple of colors? No more.",
   "version": "1.1",
+  "manifest_version": 2,
+  "offline_enabled": true,
   "app": {
     "launch": {
       "local_path": "index.html"
