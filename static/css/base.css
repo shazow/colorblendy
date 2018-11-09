@@ -110,15 +110,6 @@ ul#blend-mode li.active, ul#blend-mode li:hover {
     background-color:rgba(255,255,255,0.5);
 }
 
-#vote {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 15px;
-
-    display: none; /* Until 10kapart gets their voting on. */
-}
-
 #footer {
     text-align: center;
     font-size: 10px;
